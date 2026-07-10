@@ -1,49 +1,49 @@
-import { KeyRound, LockKeyhole, Mail, ShieldCheck } from 'lucide-react'
-import { useState } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
-import heroBowl from '../../assets/images/hero-bowl.png'
-import fruitBanana from '../../assets/images/fruit-banana.png'
-import fruitBlueberry from '../../assets/images/fruit-blueberry.png'
-import fruitKiwi from '../../assets/images/fruit-kiwi.png'
-import fruitStrawberry from '../../assets/images/fruit-strawberry.png'
-import { LogoMark } from '../../components/layout/LogoMark'
-import { useAuth } from '../../contexts/AuthContext'
-import { loginWithEmail } from '../../services/authService'
+import { KeyRound, LockKeyhole, Mail, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import heroBowl from "../../assets/images/hero-bowl.png";
+import fruitBanana from "../../assets/images/fruit-banana.png";
+import fruitBlueberry from "../../assets/images/fruit-blueberry.png";
+import fruitKiwi from "../../assets/images/fruit-kiwi.png";
+import fruitStrawberry from "../../assets/images/fruit-strawberry.png";
+import { LogoMark } from "../../components/layout/LogoMark";
+import { useAuth } from "../../contexts/AuthContext";
+import { loginWithEmail } from "../../services/authService";
 
 type LocationState = {
   from?: {
-    pathname?: string
-  }
-}
+    pathname?: string;
+  };
+};
 
 export function AdminLoginPage() {
-  const { isAuthenticated, isLoadingAuth } = useAuth()
-  const location = useLocation()
-  const locationState = location.state as LocationState | null
-  const redirectTo = locationState?.from?.pathname ?? '/admin/pedidos'
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState('')
+  const { isAuthenticated, isLoadingAuth } = useAuth();
+  const location = useLocation();
+  const locationState = location.state as LocationState | null;
+  const redirectTo = locationState?.from?.pathname ?? "/admin/pedidos";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   if (!isLoadingAuth && isAuthenticated) {
-    return <Navigate to={redirectTo} replace />
+    return <Navigate to={redirectTo} replace />;
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setIsSubmitting(true)
-    setError('')
+    event.preventDefault();
+    setIsSubmitting(true);
+    setError("");
 
     try {
-      await loginWithEmail(email, password)
+      await loginWithEmail(email, password);
     } catch (loginError) {
-      console.error('[admin] Falha ao autenticar:', loginError)
-      setError('Não foi possível entrar. Confira e-mail e senha.')
+      console.error("[admin] Falha ao autenticar:", loginError);
+      setError("Não foi possível entrar. Confira e-mail e senha.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="admin-app-shell min-h-dvh overflow-x-hidden text-[var(--admin-ink)] lg:h-dvh lg:overflow-hidden">
@@ -76,7 +76,10 @@ export function AdminLoginPage() {
           />
 
           <div className="relative z-10 flex h-full flex-col">
-            <LogoMark href="/" className="[&>span:last-child]:text-[var(--cream-50)]" />
+            <LogoMark
+              href="/"
+              className="[&>span:last-child]:text-[var(--cream-50)]"
+            />
 
             <div className="mt-7 max-w-sm lg:mt-10 xl:mt-12">
               <p className="inline-flex items-center gap-2 rounded-full bg-[oklch(98%_0.01_326_/_12%)] px-3 py-1.5 text-sm font-extrabold text-[oklch(96%_0.02_326)]">
@@ -87,7 +90,8 @@ export function AdminLoginPage() {
                 Gestão dos pedidos em um só lugar.
               </h1>
               <p className="mt-4 max-w-xs text-sm font-semibold leading-6 text-[oklch(92%_0.02_326)] sm:text-base sm:leading-7">
-                Acompanhe a fila, atualize o preparo e mantenha cada pedido organizado.
+                Acompanhe a fila, atualize o preparo e mantenha cada pedido
+                organizado.
               </p>
             </div>
 
@@ -109,7 +113,9 @@ export function AdminLoginPage() {
               <div className="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-[var(--admin-plum-soft)] text-[var(--admin-plum)]">
                 <LockKeyhole size={23} />
               </div>
-              <p className="text-sm font-extrabold text-[var(--admin-muted)]">The Açaí Co.</p>
+              <p className="text-sm font-extrabold text-[var(--admin-muted)]">
+                Shalom Açaí
+              </p>
               <h2 className="mt-1 font-display text-4xl font-extrabold leading-tight text-[var(--admin-ink)]">
                 Acesso administrativo
               </h2>
@@ -117,7 +123,9 @@ export function AdminLoginPage() {
 
             <div className="space-y-5">
               <label className="block">
-                <span className="mb-2 block text-sm font-extrabold">E-mail</span>
+                <span className="mb-2 block text-sm font-extrabold">
+                  E-mail
+                </span>
                 <span className="relative block">
                   <Mail
                     size={19}
@@ -166,11 +174,11 @@ export function AdminLoginPage() {
               className="button-leaf mt-6 min-h-[3.25rem] w-full rounded-2xl px-5 text-base font-extrabold transition duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--leaf-500)] disabled:cursor-not-allowed disabled:opacity-70"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Entrando...' : 'Entrar'}
+              {isSubmitting ? "Entrando..." : "Entrar"}
             </button>
           </form>
         </div>
       </section>
     </div>
-  )
+  );
 }

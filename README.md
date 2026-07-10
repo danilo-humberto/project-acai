@@ -1,4 +1,4 @@
-# The Acai Co.
+# Shalom Açaí
 
 Landing page e sistema de pedidos para uma loja local de acai, com montagem personalizada do pedido, acompanhamento em tempo real e painel administrativo com Kanban operacional.
 
@@ -76,14 +76,14 @@ src/
 
 ## Rotas
 
-| Rota | Descricao |
-| --- | --- |
-| `/` | Landing page e montagem do pedido |
-| `/pedido/:trackingCode` | Acompanhamento publico do pedido |
-| `/admin/login` | Login administrativo |
-| `/admin/pedidos` | Kanban de pedidos |
-| `/admin/cancelados` | Lista de pedidos cancelados |
-| `*` | Pagina 404 |
+| Rota                    | Descricao                         |
+| ----------------------- | --------------------------------- |
+| `/`                     | Landing page e montagem do pedido |
+| `/pedido/:trackingCode` | Acompanhamento publico do pedido  |
+| `/admin/login`          | Login administrativo              |
+| `/admin/pedidos`        | Kanban de pedidos                 |
+| `/admin/cancelados`     | Lista de pedidos cancelados       |
+| `*`                     | Pagina 404                        |
 
 ## Requisitos
 
