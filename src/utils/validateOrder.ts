@@ -23,7 +23,7 @@ export function validateOrder(order: OrderDraft): OrderValidation {
   }
 
   if (!order.orderTypeId) {
-    addError(validation, 'orderTypeId', 'Escolha se o pedido será açaí, açaí com sorvete ou sorvete.')
+    addError(validation, 'orderTypeId', 'Escolha se o pedido será açaí, açaí com creme ou creme.')
   }
 
   if (
@@ -31,7 +31,7 @@ export function validateOrder(order: OrderDraft): OrderValidation {
     orderTypeNeedsIceCreamFlavor(order.orderTypeId) &&
     !order.iceCreamFlavorId
   ) {
-    addError(validation, 'iceCreamFlavorId', 'Escolha o sabor do sorvete.')
+    addError(validation, 'iceCreamFlavorId', 'Escolha o sabor do creme.')
   }
 
   if (!order.customer.name.trim()) {

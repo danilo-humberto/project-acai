@@ -4,7 +4,7 @@ Landing page e sistema de pedidos para uma loja local de acai, com montagem pers
 
 ## Visao Geral
 
-O projeto foi construido com React, Vite, TypeScript, Tailwind CSS e Firebase. A experiencia principal permite que o cliente monte um pedido de acai ou sorvete, informe seus dados, escolha a forma de pagamento e acompanhe o status do pedido por um link publico.
+O projeto foi construido com React, Vite, TypeScript, Tailwind CSS e Firebase. A experiencia principal permite que o cliente monte um pedido de acai ou creme, informe seus dados, escolha a forma de pagamento e acompanhe o status do pedido por um link publico.
 
 No painel administrativo, a loja consegue visualizar os pedidos em tempo real, atualizar o status de preparo, consultar detalhes e separar pedidos cancelados em uma area propria.
 
@@ -13,8 +13,8 @@ No painel administrativo, a loja consegue visualizar os pedidos em tempo real, a
 - Landing page responsiva com hero, chamada principal e contato.
 - Montagem de pedido em etapas.
 - Escolha de tamanho do pote: P, M ou G.
-- Escolha do tipo de pedido: so acai, acai com sorvete ou so sorvete.
-- Seleção de sabor de sorvete quando necessario.
+- Escolha do tipo de pedido: so acai, acai com creme ou so creme.
+- Seleção de sabor de creme quando necessario.
 - Seleção de frutas, adicionais e calda.
 - Opcao de sem calda.
 - Dados do cliente com mascara de telefone.
@@ -164,9 +164,9 @@ cancelled
 
 ## Fluxo do Pedido
 
-1. Cliente escolhe o tamanho do pote.
-2. Cliente escolhe o tipo do pedido.
-3. Se necessario, escolhe o sabor do sorvete.
+1. Cliente escolhe o tipo do pedido.
+2. Cliente escolhe o tamanho do pote.
+3. Se necessario, escolhe o sabor do creme.
 4. Cliente escolhe frutas, adicionais e calda.
 5. Cliente informa nome e telefone.
 6. Cliente escolhe a forma de pagamento.

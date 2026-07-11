@@ -1,15 +1,24 @@
-import type { OrderValidation, SizeOption } from '../../types/order'
+import { getSizePrice } from '../../data/sizes'
+import type { OrderTypeId, OrderValidation, SizeOption } from '../../types/order'
 import { OptionCard } from '../ui/OptionCard'
 
 type SizeSelectorProps = {
   sizes: SizeOption[]
   selectedSizeId: string
+  selectedOrderTypeId: OrderTypeId | ''
   fieldErrors: OrderValidation['fieldErrors']
   stepNumber: number
   onSelect: (sizeId: string) => void
 }
 
-export function SizeSelector({ sizes, selectedSizeId, fieldErrors, stepNumber, onSelect }: SizeSelectorProps) {
+export function SizeSelector({
+  sizes,
+  selectedSizeId,
+  selectedOrderTypeId,
+  fieldErrors,
+  stepNumber,
+  onSelect,
+}: SizeSelectorProps) {
   return (
     <section id="builder-size" className="scroll-mt-28">
       <div className="mb-5">
@@ -22,7 +31,7 @@ export function SizeSelector({ sizes, selectedSizeId, fieldErrors, stepNumber, o
             key={size.id}
             title={size.name}
             description={size.description}
-            price={size.price}
+            price={selectedOrderTypeId ? getSizePrice(size, selectedOrderTypeId) : undefined}
             image={size.image}
             selected={size.id === selectedSizeId}
             onClick={() => onSelect(size.id)}

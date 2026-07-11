@@ -21,7 +21,7 @@ export function IceCreamFlavorSelector({
     <section id="builder-icecream-flavor" className="scroll-mt-28">
       <div className="mb-5">
         <p className="text-sm font-extrabold text-[var(--leaf-700)]">
-          {stepNumber}. Sabor do sorvete
+          {stepNumber}. Sabor do creme
         </p>
         <h3 className="break-words font-display text-3xl font-extrabold leading-tight text-[var(--ink-900)]">
           Escolha 1 sabor

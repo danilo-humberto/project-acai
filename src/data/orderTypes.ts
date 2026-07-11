@@ -12,14 +12,14 @@ export const orderTypes: OrderTypeOption[] = [
   },
   {
     id: 'acai-icecream',
-    name: 'Açaí + 1 sorvete',
-    description: 'Açaí com um sabor de sorvete',
+    name: 'Açaí + 1 creme',
+    description: 'Açaí com um sabor de creme',
     image: orderAcaiIceCreamImage,
   },
   {
     id: 'icecream',
-    name: 'Só sorvete',
-    description: 'Um sabor de sorvete no pote',
+    name: 'Só creme',
+    description: 'Um sabor de creme no pote',
     image: orderIceCreamImage,
   },
 ]

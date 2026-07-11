@@ -43,7 +43,7 @@ export function buildWhatsAppMessage(order: OrderDraft, store: StoreConfig) {
     `Tamanho do pote: ${selectedSize?.name ?? 'Não informado'}`,
     `Tipo do pedido: ${selectedOrderType?.name ?? 'Não informado'}`,
     orderTypeNeedsIceCreamFlavor(order.orderTypeId)
-      ? `Sabor do sorvete: ${selectedIceCreamFlavor?.name ?? 'Não informado'}`
+      ? `Sabor do creme: ${selectedIceCreamFlavor?.name ?? 'Não informado'}`
       : '',
     '',
     'Frutas:',

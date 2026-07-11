@@ -1,7 +1,7 @@
 import product300Image from '../assets/images/product-300.png'
 import product500Image from '../assets/images/product-500.png'
 import product700Image from '../assets/images/product-700.png'
-import type { SizeOption } from '../types/order'
+import type { OrderTypeId, SizeOption } from '../types/order'
 
 export const sizes: SizeOption[] = [
   {
@@ -10,6 +10,7 @@ export const sizes: SizeOption[] = [
     volume: 'P',
     description: 'Pote pequeno',
     price: 8,
+    creamPrice: 9,
     image: product300Image,
   },
   {
@@ -18,6 +19,7 @@ export const sizes: SizeOption[] = [
     volume: 'M',
     description: 'Pote médio',
     price: 10,
+    creamPrice: 11,
     image: product500Image,
   },
   {
@@ -25,7 +27,16 @@ export const sizes: SizeOption[] = [
     name: 'G',
     volume: 'G',
     description: 'Pote grande',
-    price: 12,
+    price: 13,
+    creamPrice: 14,
     image: product700Image,
   },
 ]
+
+export function getSizePrice(size: SizeOption, orderTypeId: OrderTypeId | '') {
+  if (!orderTypeId) {
+    return 0
+  }
+
+  return orderTypeId === 'acai' ? size.price : size.creamPrice
+}

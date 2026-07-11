@@ -69,7 +69,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
         <SummaryLine
           label="Tamanho do pote"
           value={selectedSize?.name ?? 'Não selecionado'}
-          price={selectedSize?.price}
+          price={selectedSize && order.orderTypeId ? total : undefined}
           icon={<ClipboardList size={18} />}
         />
         <SummaryLine
@@ -79,7 +79,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
         />
         {shouldChooseIceCreamFlavor && (
           <SummaryLine
-            label="Sabor do sorvete"
+            label="Sabor do creme"
             value={selectedIceCreamFlavor?.name ?? 'Não selecionado'}
             icon={<Snowflake size={18} />}
           />
