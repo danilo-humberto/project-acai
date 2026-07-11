@@ -25,6 +25,7 @@ No painel administrativo, a loja consegue visualizar os pedidos em tempo real, a
 - Pagina publica de acompanhamento do pedido.
 - Painel admin com login via Firebase Authentication.
 - Kanban de pedidos com atualizacao em tempo real.
+- Controle em tempo real da disponibilidade de cremes, frutas, adicionais e caldas.
 - Separacao de pedidos cancelados em uma tela propria.
 - Pagina 404 personalizada.
 
@@ -82,6 +83,7 @@ src/
 | `/pedido/:trackingCode` | Acompanhamento publico do pedido  |
 | `/admin/login`          | Login administrativo              |
 | `/admin/pedidos`        | Kanban de pedidos                 |
+| `/admin/disponibilidade` | Controle de ingredientes          |
 | `/admin/cancelados`     | Lista de pedidos cancelados       |
 | `*`                     | Pagina 404                        |
 
@@ -134,6 +136,12 @@ http://localhost:5173
 npm run build
 ```
 
+## Testes
+
+```bash
+npm test
+```
+
 ## Preview do Build
 
 ```bash
@@ -142,13 +150,35 @@ npm run preview
 
 ## Firebase
 
-O projeto usa Firestore para persistir pedidos na colecao:
+O projeto usa Firestore para persistir pedidos e disponibilidade:
 
 ```text
 orders
+storeSettings/ingredientAvailability
+admins/{uid}
 ```
 
 Cada pedido e salvo usando o codigo de acompanhamento como identificador do documento. O painel admin escuta a colecao em tempo real e atualiza o Kanban automaticamente quando pedidos sao criados ou alterados.
+
+O documento `storeSettings/ingredientAvailability` guarda somente os IDs esgotados. Quando ele ainda não existe, todos os ingredientes são considerados disponíveis. A primeira alteração feita pelo admin cria o documento automaticamente.
+
+### Liberando um administrador
+
+Antes de publicar as regras do Firestore:
+
+1. Crie o usuário do dono no Firebase Authentication.
+2. Copie o UID desse usuário.
+3. No Firestore, crie a coleção `admins`.
+4. Crie um documento cujo ID seja exatamente o UID copiado.
+5. Adicione o campo booleano `active` com valor `true`.
+
+As regras ficam em `firestore.rules` e podem ser publicadas com:
+
+```bash
+firebase deploy --only firestore:rules
+```
+
+Sem o documento `admins/{uid}`, o usuário consegue autenticar, mas o Firestore bloqueia a leitura geral dos pedidos e qualquer alteração administrativa.
 
 ### Status dos Pedidos
 
@@ -182,6 +212,7 @@ O admin permite:
 - consultar detalhes completos;
 - cancelar pedidos;
 - acompanhar pedidos cancelados em tela separada;
+- marcar ingredientes como disponíveis ou esgotados;
 - verificar indicadores operacionais.
 
 O acesso ao painel e protegido por Firebase Authentication.
