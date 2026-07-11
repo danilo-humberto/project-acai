@@ -56,7 +56,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
   return (
     <aside
       data-summary
-      className="hidden min-w-0 rounded-3xl bg-[var(--cream-50)] text-[var(--ink-900)] panel-shadow lg:sticky lg:top-28 lg:block"
+      className="hidden min-w-0 rounded-3xl bg-[var(--cream-50)] text-[var(--ink-900)] panel-shadow lg:block lg:self-start"
     >
       <div className="rounded-t-3xl bg-[linear-gradient(135deg,var(--plum-800),var(--berry-600))] px-5 py-4 text-[var(--cream-50)]">
         <div className="flex items-center gap-3">
