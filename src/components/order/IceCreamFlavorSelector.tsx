@@ -31,7 +31,7 @@ export function IceCreamFlavorSelector({
           Escolha 1 sabor
         </h3>
       </div>
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         {flavors.map((flavor) => (
           <RadioCard
             key={flavor.id}
