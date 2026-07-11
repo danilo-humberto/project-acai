@@ -167,7 +167,7 @@ export function AdminOrdersPage() {
       <div className="mb-8 grid gap-6 lg:grid-cols-[minmax(18rem,1fr)_minmax(42rem,64rem)] lg:items-center">
         <div className="flex min-w-0 gap-5">
           <span className="mt-1 h-14 w-1 shrink-0 rounded-full bg-[var(--admin-leaf)]" />
-          <div>
+          <div className="h-fit mt-2">
             <h2 className="font-display text-5xl font-extrabold leading-none tracking-tight text-[var(--admin-ink)]">
               Pedidos
             </h2>
