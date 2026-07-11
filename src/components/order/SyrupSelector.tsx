@@ -5,11 +5,20 @@ import { RadioCard } from '../ui/RadioCard'
 type SyrupSelectorProps = {
   syrups: SyrupOption[]
   selectedSyrupId: string
+  unavailableSyrupIds: string[]
+  isAvailabilityReady: boolean
   stepNumber: number
   onSelect: (syrupId: string) => void
 }
 
-export function SyrupSelector({ syrups, selectedSyrupId, stepNumber, onSelect }: SyrupSelectorProps) {
+export function SyrupSelector({
+  syrups,
+  selectedSyrupId,
+  unavailableSyrupIds,
+  isAvailabilityReady,
+  stepNumber,
+  onSelect,
+}: SyrupSelectorProps) {
   return (
     <section id="builder-syrup" className="scroll-mt-28">
       <div className="mb-5">
@@ -23,6 +32,11 @@ export function SyrupSelector({ syrups, selectedSyrupId, stepNumber, onSelect }:
             title={syrup.name}
             description={syrup.description}
             selected={syrup.id === selectedSyrupId}
+            disabled={
+              syrup.id !== 'sem-calda' &&
+              (!isAvailabilityReady || unavailableSyrupIds.includes(syrup.id))
+            }
+            statusLabel={unavailableSyrupIds.includes(syrup.id) ? 'Esgotado' : undefined}
             icon={<Droplets size={18} />}
             onClick={() => onSelect(syrup.id)}
           />

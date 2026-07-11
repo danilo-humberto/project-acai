@@ -91,11 +91,25 @@ export function BuilderSection({ builder }: BuilderSectionProps) {
               stepNumber={getStepNumber("size")}
               onSelect={builder.setSize}
             />
+            {(builder.availabilityError || builder.availabilityNotice) && (
+              <div
+                className={
+                  builder.availabilityError
+                    ? "rounded-2xl bg-[oklch(45%_0.17_346_/_10%)] p-4 text-sm font-bold leading-6 text-[var(--berry-600)]"
+                    : "rounded-2xl bg-[oklch(72%_0.14_126_/_12%)] p-4 text-sm font-bold leading-6 text-[var(--leaf-700)]"
+                }
+                role="status"
+              >
+                {builder.availabilityError ?? builder.availabilityNotice}
+              </div>
+            )}
             {builder.shouldChooseIceCreamFlavor && (
               <IceCreamFlavorSelector
                 flavors={iceCreamFlavors}
                 selectedFlavorId={builder.order.iceCreamFlavorId}
                 fieldErrors={builder.validation.fieldErrors}
+                unavailableFlavorIds={builder.availability.creamFlavorIds}
+                isAvailabilityReady={builder.isAvailabilityReady}
                 stepNumber={getStepNumber("icecream-flavor")}
                 onSelect={builder.setIceCreamFlavor}
               />
@@ -103,18 +117,24 @@ export function BuilderSection({ builder }: BuilderSectionProps) {
             <FruitSelector
               fruits={fruits}
               selectedFruitIds={builder.order.fruitIds}
+              unavailableFruitIds={builder.availability.fruitIds}
+              isAvailabilityReady={builder.isAvailabilityReady}
               stepNumber={getStepNumber("fruits")}
               onToggle={builder.toggleFruit}
             />
             <ToppingSelector
               toppings={toppings}
               selectedToppingIds={builder.order.toppingIds}
+              unavailableToppingIds={builder.availability.toppingIds}
+              isAvailabilityReady={builder.isAvailabilityReady}
               stepNumber={getStepNumber("toppings")}
               onToggle={builder.toggleTopping}
             />
             <SyrupSelector
               syrups={syrups}
               selectedSyrupId={builder.order.syrupId}
+              unavailableSyrupIds={builder.availability.syrupIds}
+              isAvailabilityReady={builder.isAvailabilityReady}
               stepNumber={getStepNumber("syrup")}
               onSelect={builder.setSyrup}
             />

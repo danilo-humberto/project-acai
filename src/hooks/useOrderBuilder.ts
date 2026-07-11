@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { fruits } from '../data/fruits'
 import { iceCreamFlavors } from '../data/iceCreamFlavors'
 import { orderTypeNeedsIceCreamFlavor, orderTypes } from '../data/orderTypes'
@@ -14,7 +14,14 @@ import type {
   PaymentMethod,
 } from '../types/order'
 import { calculateOrderTotal } from '../utils/calculateOrderTotal'
+import {
+  getUnavailableOrderIngredients,
+  isIngredientAvailable,
+  removeUnavailableIngredients,
+  UnavailableIngredientsError,
+} from '../utils/ingredientAvailability'
 import { validateOrder } from '../utils/validateOrder'
+import { useIngredientAvailability } from './useIngredientAvailability'
 
 const initialOrder: OrderDraft = {
   sizeId: '',
@@ -41,6 +48,13 @@ export function useOrderBuilder() {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false)
   const [isFinalizing, setIsFinalizing] = useState(false)
   const [finalizeError, setFinalizeError] = useState<string | null>(null)
+  const [availabilityNotice, setAvailabilityNotice] = useState<string | null>(null)
+  const {
+    availability,
+    isLoading: isAvailabilityLoading,
+    error: availabilityError,
+  } = useIngredientAvailability()
+  const isAvailabilityReady = !isAvailabilityLoading && !availabilityError
 
   const selectedSize = useMemo(() => sizes.find((size) => size.id === order.sizeId), [order.sizeId])
   const selectedOrderType = useMemo(
@@ -69,7 +83,44 @@ export function useOrderBuilder() {
   )
 
   const total = useMemo(() => calculateOrderTotal(order), [order])
-  const validation = useMemo(() => validateOrder(order), [order])
+  const validation = useMemo(() => {
+    const currentValidation = validateOrder(order)
+
+    if (isAvailabilityLoading) {
+      currentValidation.errors.push('Aguarde o carregamento dos ingredientes disponíveis.')
+    } else if (availabilityError) {
+      currentValidation.errors.push(availabilityError)
+    } else {
+      const unavailableItems = getUnavailableOrderIngredients(order, availability)
+
+      if (unavailableItems.length > 0) {
+        currentValidation.errors.push(
+          `Escolha novamente: ${unavailableItems.map((item) => item.name).join(', ')} ${unavailableItems.length === 1 ? 'está indisponível' : 'estão indisponíveis'}.`,
+        )
+      }
+    }
+
+    currentValidation.isValid = currentValidation.errors.length === 0
+
+    return currentValidation
+  }, [availability, availabilityError, isAvailabilityLoading, order])
+
+  useEffect(() => {
+    if (!isAvailabilityReady) {
+      return
+    }
+
+    const result = removeUnavailableIngredients(order, availability)
+
+    if (result.removedItems.length === 0) {
+      return
+    }
+
+    setOrder(result.order)
+    setAvailabilityNotice(
+      `${result.removedItems.map((item) => item.name).join(', ')} ${result.removedItems.length === 1 ? 'ficou indisponível e foi removido' : 'ficaram indisponíveis e foram removidos'} do pedido.`,
+    )
+  }, [availability, isAvailabilityReady, order])
 
   const setSize = (sizeId: string) => {
     setOrder((current) => ({ ...current, sizeId }))
@@ -86,10 +137,21 @@ export function useOrderBuilder() {
   }
 
   const setIceCreamFlavor = (iceCreamFlavorId: string) => {
+    if (
+      !isAvailabilityReady ||
+      !isIngredientAvailable(availability, 'creamFlavors', iceCreamFlavorId)
+    ) {
+      return
+    }
+
     setOrder((current) => ({ ...current, iceCreamFlavorId }))
   }
 
   const toggleFruit = (fruitId: string) => {
+    if (!isAvailabilityReady || !isIngredientAvailable(availability, 'fruits', fruitId)) {
+      return
+    }
+
     setOrder((current) => {
       const alreadySelected = current.fruitIds.includes(fruitId)
       const fruitIds = alreadySelected
@@ -103,6 +165,10 @@ export function useOrderBuilder() {
   }
 
   const toggleTopping = (toppingId: string) => {
+    if (!isAvailabilityReady || !isIngredientAvailable(availability, 'toppings', toppingId)) {
+      return
+    }
+
     setOrder((current) => {
       const alreadySelected = current.toppingIds.includes(toppingId)
       const toppingIds = alreadySelected
@@ -114,6 +180,10 @@ export function useOrderBuilder() {
   }
 
   const setSyrup = (syrupId: string) => {
+    if (!isAvailabilityReady || !isIngredientAvailable(availability, 'syrups', syrupId)) {
+      return
+    }
+
     setOrder((current) => ({ ...current, syrupId }))
   }
 
@@ -152,9 +222,7 @@ export function useOrderBuilder() {
   }
 
   const finalizeOrder = async () => {
-    const currentValidation = validateOrder(order)
-
-    if (!currentValidation.isValid) {
+    if (!validation.isValid) {
       return false
     }
 
@@ -171,7 +239,11 @@ export function useOrderBuilder() {
       return true
     } catch (error) {
       console.error('[pedido] Falha ao finalizar pedido no Firestore:', error)
-      setFinalizeError('Não foi possível finalizar o pedido agora. Tente novamente em instantes.')
+      setFinalizeError(
+        error instanceof UnavailableIngredientsError
+          ? `${error.ingredientNames.join(', ')} ficou indisponível. Ajuste o pedido para continuar.`
+          : 'Não foi possível finalizar o pedido agora. Tente novamente em instantes.',
+      )
 
       return false
     } finally {
@@ -184,6 +256,7 @@ export function useOrderBuilder() {
     setConfirmationData(null)
     setIsConfirmationModalOpen(false)
     setFinalizeError(null)
+    setAvailabilityNotice(null)
   }
 
   return {
@@ -201,6 +274,11 @@ export function useOrderBuilder() {
     isConfirmationModalOpen,
     isFinalizing,
     finalizeError,
+    availability,
+    isAvailabilityLoading,
+    isAvailabilityReady,
+    availabilityError,
+    availabilityNotice,
     setSize,
     setOrderType,
     setIceCreamFlavor,

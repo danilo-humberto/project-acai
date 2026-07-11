@@ -81,9 +81,13 @@ export type Order = {
   items: {
     productName?: string
     size?: string
+    iceCreamFlavorId?: string
     iceCreamFlavor?: string
+    fruitIds?: string[]
     fruits?: string[]
+    toppingIds?: string[]
     toppings?: string[]
+    syrupId?: string
     syrup?: string
     observation?: string
   }

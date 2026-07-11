@@ -5,6 +5,8 @@ import { CheckboxCard } from '../ui/CheckboxCard'
 type ToppingSelectorProps = {
   toppings: ToppingOption[]
   selectedToppingIds: string[]
+  unavailableToppingIds: string[]
+  isAvailabilityReady: boolean
   stepNumber: number
   onToggle: (toppingId: string) => void
 }
@@ -20,7 +22,14 @@ const toppingIcons = {
   'pacoca-ou-canudo': <Cookie size={18} />,
 }
 
-export function ToppingSelector({ toppings, selectedToppingIds, stepNumber, onToggle }: ToppingSelectorProps) {
+export function ToppingSelector({
+  toppings,
+  selectedToppingIds,
+  unavailableToppingIds,
+  isAvailabilityReady,
+  stepNumber,
+  onToggle,
+}: ToppingSelectorProps) {
   return (
     <section id="builder-toppings" className="scroll-mt-28">
       <div className="mb-5">
@@ -34,6 +43,8 @@ export function ToppingSelector({ toppings, selectedToppingIds, stepNumber, onTo
             title={topping.name}
             description={topping.description}
             selected={selectedToppingIds.includes(topping.id)}
+            disabled={!isAvailabilityReady || unavailableToppingIds.includes(topping.id)}
+            statusLabel={unavailableToppingIds.includes(topping.id) ? 'Esgotado' : undefined}
             icon={toppingIcons[topping.id as keyof typeof toppingIcons]}
             onClick={() => onToggle(topping.id)}
           />

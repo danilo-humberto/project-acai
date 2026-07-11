@@ -52,9 +52,13 @@ export function createMockOrder(orderDraft: OrderDraft): MockOrderResult {
       items: {
         productName: selectedOrderType?.name,
         size: selectedSize?.name,
+        iceCreamFlavorId: orderDraft.iceCreamFlavorId,
         iceCreamFlavor: selectedIceCreamFlavor?.name,
+        fruitIds: orderDraft.fruitIds,
         fruits: selectedFruits.map((fruit) => fruit.name),
+        toppingIds: orderDraft.toppingIds,
         toppings: selectedToppings.map((topping) => topping.name),
+        syrupId: orderDraft.syrupId,
         syrup: selectedSyrup?.name,
         observation: orderDraft.observation.trim() || undefined,
       },

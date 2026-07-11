@@ -1,4 +1,4 @@
-import { collection, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
+import { collection, doc, onSnapshot, orderBy, query, runTransaction, serverTimestamp, updateDoc } from 'firebase/firestore'
 import { fruits } from '../data/fruits'
 import { iceCreamFlavors } from '../data/iceCreamFlavors'
 import { orderTypes } from '../data/orderTypes'
@@ -7,10 +7,16 @@ import { sizes } from '../data/sizes'
 import { syrups } from '../data/syrups'
 import { toppings } from '../data/toppings'
 import { db } from '../lib/firebase'
+import { getIngredientAvailabilityReference } from './ingredientAvailabilityService'
 import type { Order, OrderConfirmationData, OrderDraft, OrderStatus } from '../types/order'
 import { calculateOrderTotal } from '../utils/calculateOrderTotal'
 import { parseBRLCurrencyInput } from '../utils/formatCurrency'
 import { generatePublicCode, generateTrackingCode } from '../utils/orderCode'
+import {
+  getUnavailableOrderIngredients,
+  normalizeIngredientAvailability,
+  UnavailableIngredientsError,
+} from '../utils/ingredientAvailability'
 
 const ORDERS_COLLECTION = 'orders'
 
@@ -52,9 +58,13 @@ function buildOrderDocument(orderDraft: OrderDraft, publicCode: string, tracking
     items: {
       productName: selectedOrderType?.name,
       size: selectedSize?.name,
+      iceCreamFlavorId: orderDraft.iceCreamFlavorId,
       iceCreamFlavor: selectedIceCreamFlavor?.name,
+      fruitIds: orderDraft.fruitIds,
       fruits: selectedFruits.map((fruit) => fruit.name),
+      toppingIds: orderDraft.toppingIds,
       toppings: selectedToppings.map((topping) => topping.name),
+      syrupId: orderDraft.syrupId,
       syrup: selectedSyrup?.name,
       observation: orderDraft.observation.trim() || undefined,
     },
@@ -77,9 +87,23 @@ export async function createOrder(orderDraft: OrderDraft): Promise<OrderConfirma
   const trackingCode = generateTrackingCode(publicCode)
   const trackingUrl = `/pedido/${trackingCode}`
   const order = removeUndefinedFields(buildOrderDocument(orderDraft, publicCode, trackingCode))
+  const orderReference = doc(db, ORDERS_COLLECTION, trackingCode)
+  const availabilityReference = getIngredientAvailabilityReference()
 
   try {
-    await setDoc(doc(db, ORDERS_COLLECTION, trackingCode), order)
+    await runTransaction(db, async (transaction) => {
+      const availabilitySnapshot = await transaction.get(availabilityReference)
+      const availability = normalizeIngredientAvailability(
+        availabilitySnapshot.exists() ? availabilitySnapshot.data() : undefined,
+      )
+      const unavailableItems = getUnavailableOrderIngredients(orderDraft, availability)
+
+      if (unavailableItems.length > 0) {
+        throw new UnavailableIngredientsError(unavailableItems.map((item) => item.name))
+      }
+
+      transaction.set(orderReference, order)
+    })
   } catch (error) {
     console.error('[orderService] Erro ao salvar pedido no Firestore:', error)
     throw error

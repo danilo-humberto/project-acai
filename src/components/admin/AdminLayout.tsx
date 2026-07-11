@@ -1,4 +1,4 @@
-import { Ban, ClipboardList, LogOut } from 'lucide-react'
+import { Ban, ClipboardList, LogOut, PackageOpen } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { LogoMark } from '../layout/LogoMark'
 import { useAuth } from '../../contexts/AuthContext'
@@ -38,6 +38,11 @@ export function AdminLayout({ children, cancelledCount = 0 }: AdminLayoutProps) 
 
           <nav className="flex flex-wrap items-center gap-3">
             <AdminNavLink to="/admin/pedidos" icon={<ClipboardList size={18} />} label="Pedidos" />
+            <AdminNavLink
+              to="/admin/disponibilidade"
+              icon={<PackageOpen size={18} />}
+              label="Disponibilidade"
+            />
             <AdminNavLink
               to="/admin/cancelados"
               icon={<Ban size={18} />}

@@ -6,6 +6,8 @@ type IceCreamFlavorSelectorProps = {
   flavors: IceCreamFlavorOption[]
   selectedFlavorId: string
   fieldErrors: OrderValidation['fieldErrors']
+  unavailableFlavorIds: string[]
+  isAvailabilityReady: boolean
   stepNumber: number
   onSelect: (flavorId: string) => void
 }
@@ -14,6 +16,8 @@ export function IceCreamFlavorSelector({
   flavors,
   selectedFlavorId,
   fieldErrors,
+  unavailableFlavorIds,
+  isAvailabilityReady,
   stepNumber,
   onSelect,
 }: IceCreamFlavorSelectorProps) {
@@ -34,6 +38,8 @@ export function IceCreamFlavorSelector({
             title={flavor.name}
             description={flavor.description}
             selected={flavor.id === selectedFlavorId}
+            disabled={!isAvailabilityReady || unavailableFlavorIds.includes(flavor.id)}
+            statusLabel={unavailableFlavorIds.includes(flavor.id) ? 'Esgotado' : undefined}
             icon={<Snowflake size={18} />}
             onClick={() => onSelect(flavor.id)}
           />

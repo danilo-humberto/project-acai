@@ -3,6 +3,7 @@ import { ProtectedRoute } from '../../components/admin/ProtectedRoute'
 import { AuthProvider } from '../../contexts/AuthContext'
 import { NotFoundPage } from '../NotFoundPage'
 import { AdminCancelledOrdersPage } from './AdminCancelledOrdersPage'
+import { AdminAvailabilityPage } from './AdminAvailabilityPage'
 import { AdminLoginPage } from './AdminLoginPage'
 import { AdminOrdersPage } from './AdminOrdersPage'
 
@@ -21,6 +22,14 @@ export function AdminRoutes() {
           element={
             <ProtectedRoute>
               <AdminOrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="disponibilidade"
+          element={
+            <ProtectedRoute>
+              <AdminAvailabilityPage />
             </ProtectedRoute>
           }
         />

@@ -5,6 +5,8 @@ import { CheckboxCard } from '../ui/CheckboxCard'
 type FruitSelectorProps = {
   fruits: FruitOption[]
   selectedFruitIds: string[]
+  unavailableFruitIds: string[]
+  isAvailabilityReady: boolean
   stepNumber: number
   onToggle: (fruitId: string) => void
 }
@@ -16,7 +18,14 @@ const fruitIcons = {
   manga: <Apple size={18} />,
 }
 
-export function FruitSelector({ fruits, selectedFruitIds, stepNumber, onToggle }: FruitSelectorProps) {
+export function FruitSelector({
+  fruits,
+  selectedFruitIds,
+  unavailableFruitIds,
+  isAvailabilityReady,
+  stepNumber,
+  onToggle,
+}: FruitSelectorProps) {
   return (
     <section id="builder-fruits" className="scroll-mt-28">
       <div className="mb-5">
@@ -30,6 +39,8 @@ export function FruitSelector({ fruits, selectedFruitIds, stepNumber, onToggle }
             title={fruit.name}
             description={fruit.description}
             selected={selectedFruitIds.includes(fruit.id)}
+            disabled={!isAvailabilityReady || unavailableFruitIds.includes(fruit.id)}
+            statusLabel={unavailableFruitIds.includes(fruit.id) ? 'Esgotado' : undefined}
             icon={fruitIcons[fruit.id as keyof typeof fruitIcons]}
             onClick={() => onToggle(fruit.id)}
           />
