@@ -12,13 +12,12 @@ type ToppingSelectorProps = {
 const toppingIcons = {
   amendoim: <Nut size={18} />,
   granola: <Sparkles size={18} />,
+  'po-de-biscoito': <Cookie size={18} />,
   leite: <Milk size={18} />,
-  biscoito: <Cookie size={18} />,
   jujuba: <Sparkles size={18} />,
-  cereais: <Sparkles size={18} />,
   mms: <Cookie size={18} />,
-  pacoca: <Cookie size={18} />,
-  canudo: <Cookie size={18} />,
+  cereais: <Sparkles size={18} />,
+  'pacoca-ou-canudo': <Cookie size={18} />,
 }
 
 export function ToppingSelector({ toppings, selectedToppingIds, stepNumber, onToggle }: ToppingSelectorProps) {

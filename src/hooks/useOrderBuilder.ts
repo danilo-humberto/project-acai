@@ -107,9 +107,7 @@ export function useOrderBuilder() {
       const alreadySelected = current.toppingIds.includes(toppingId)
       const toppingIds = alreadySelected
         ? current.toppingIds.filter((id) => id !== toppingId)
-        : current.toppingIds.length < 6
-          ? [...current.toppingIds, toppingId]
-          : current.toppingIds
+        : [...current.toppingIds, toppingId]
 
       return { ...current, toppingIds }
     })

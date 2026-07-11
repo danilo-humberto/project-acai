@@ -24,7 +24,7 @@ export const orderSteps: OrderStep[] = [
   {
     id: 'toppings',
     title: 'Adicionais',
-    description: 'Ate 6 opcoes',
+    description: 'Escolha à vontade',
   },
   {
     id: 'syrup',
