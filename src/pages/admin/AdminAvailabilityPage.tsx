@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   CheckCircle2,
+  ChevronDown,
   CircleOff,
   LoaderCircle,
   PackageOpen,
@@ -24,7 +25,7 @@ export function AdminAvailabilityPage() {
   const { availability, isLoading, error: loadError } = useIngredientAvailability()
   const [updatingKey, setUpdatingKey] = useState<string | null>(null)
   const [updateError, setUpdateError] = useState('')
-  const [successMessage, setSuccessMessage] = useState('')
+  const [openCategory, setOpenCategory] = useState<IngredientCategory | null>('creamFlavors')
 
   const unavailableCount = useMemo(
     () =>
@@ -47,15 +48,9 @@ export function AdminAvailabilityPage() {
     const key = `${category}:${item.id}`
     setUpdatingKey(key)
     setUpdateError('')
-    setSuccessMessage('')
 
     try {
       await setIngredientAvailability(category, item.id, nextAvailable)
-      setSuccessMessage(
-        nextAvailable
-          ? `${item.name} está disponível novamente.`
-          : `${item.name} foi marcado como esgotado.`,
-      )
     } catch (error) {
       console.error('[admin] Falha ao atualizar disponibilidade:', error)
       setUpdateError(`Não foi possível atualizar ${item.name}. Tente novamente.`)
@@ -97,13 +92,6 @@ export function AdminAvailabilityPage() {
         </div>
       )}
 
-      {successMessage && (
-        <div className="mb-5 flex items-start gap-2 rounded-2xl border border-[oklch(72%_0.14_126_/_28%)] bg-[oklch(72%_0.14_126_/_12%)] px-4 py-3 text-sm font-bold text-[var(--admin-leaf)]">
-          <CheckCircle2 className="mt-0.5 shrink-0" size={17} />
-          {successMessage}
-        </div>
-      )}
-
       {isLoading ? (
         <AvailabilitySkeleton />
       ) : loadError ? (
@@ -124,6 +112,10 @@ export function AdminAvailabilityPage() {
               category={category}
               availability={availability}
               updatingKey={updatingKey}
+              isOpen={openCategory === category.id}
+              onOpenChange={() =>
+                setOpenCategory((current) => (current === category.id ? null : category.id))
+              }
               onToggle={handleToggle}
             />
           ))}
@@ -137,6 +129,8 @@ type AvailabilityCategoryProps = {
   category: AvailabilityCategoryDefinition
   availability: ReturnType<typeof useIngredientAvailability>['availability']
   updatingKey: string | null
+  isOpen: boolean
+  onOpenChange: () => void
   onToggle: (
     category: IngredientCategory,
     item: AvailabilityItem,
@@ -148,6 +142,8 @@ function AvailabilityCategory({
   category,
   availability,
   updatingKey,
+  isOpen,
+  onOpenChange,
   onToggle,
 }: AvailabilityCategoryProps) {
   const availableCount = category.items.filter((item) =>
@@ -155,38 +151,61 @@ function AvailabilityCategory({
   ).length
 
   return (
-    <section className="rounded-3xl border border-[oklch(89%_0.015_326_/_72%)] bg-[oklch(99%_0.006_326_/_72%)] p-5 shadow-[0_18px_48px_oklch(14%_0.05_326_/_7%)] backdrop-blur-xl sm:p-6">
-      <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h3 className="font-display text-2xl font-extrabold text-[var(--admin-ink)]">
+    <section className="overflow-hidden rounded-3xl border border-[oklch(89%_0.015_326_/_72%)] bg-[oklch(99%_0.006_326_/_72%)] shadow-[0_18px_48px_oklch(14%_0.05_326_/_7%)] backdrop-blur-xl">
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={`availability-${category.id}`}
+        onClick={onOpenChange}
+        className="flex w-full items-center gap-4 p-5 text-left transition hover:bg-[oklch(97%_0.012_326_/_72%)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--admin-plum)] sm:p-6"
+      >
+        <span className="min-w-0 flex-1">
+          <span className="block font-display text-2xl font-extrabold text-[var(--admin-ink)]">
             {category.title}
-          </h3>
-          <p className="mt-1 text-sm font-semibold text-[var(--admin-muted)]">
+          </span>
+          <span className="mt-1 block text-sm font-semibold text-[var(--admin-muted)]">
             {category.description}
-          </p>
-        </div>
-        <p className="text-sm font-extrabold text-[var(--admin-muted)]">
+          </span>
+        </span>
+        <span className="hidden shrink-0 text-sm font-extrabold text-[var(--admin-muted)] sm:block">
           {availableCount} de {category.items.length} disponíveis
-        </p>
-      </div>
+        </span>
+        <ChevronDown
+          size={22}
+          className={cn(
+            'shrink-0 text-[var(--admin-plum)] transition-transform duration-200',
+            isOpen && 'rotate-180',
+          )}
+        />
+      </button>
 
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {category.items.map((item) => {
-          const isAvailable = isIngredientAvailable(availability, category.id, item.id)
-          const itemKey = `${category.id}:${item.id}`
+      {isOpen && (
+        <div
+          id={`availability-${category.id}`}
+          className="border-t border-[oklch(89%_0.015_326_/_72%)] p-5 sm:p-6"
+        >
+          <p className="mb-4 text-sm font-extrabold text-[var(--admin-muted)] sm:hidden">
+            {availableCount} de {category.items.length} disponíveis
+          </p>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {category.items.map((item) => {
+              const isAvailable = isIngredientAvailable(availability, category.id, item.id)
+              const itemKey = `${category.id}:${item.id}`
 
-          return (
-            <AvailabilityToggle
-              key={item.id}
-              item={item}
-              isAvailable={isAvailable}
-              isUpdating={updatingKey === itemKey}
-              disabled={Boolean(updatingKey && updatingKey !== itemKey)}
-              onToggle={() => void onToggle(category.id, item, !isAvailable)}
-            />
-          )
-        })}
-      </div>
+              return (
+                <AvailabilityToggle
+                  key={item.id}
+                  item={item}
+                  isAvailable={isAvailable}
+                  isUpdating={updatingKey === itemKey}
+                  disabled={Boolean(updatingKey && updatingKey !== itemKey)}
+                  onToggle={() => void onToggle(category.id, item, !isAvailable)}
+                />
+              )
+            })}
+          </div>
+        </div>
+      )}
     </section>
   )
 }
@@ -261,14 +280,7 @@ function AvailabilitySkeleton() {
           className="rounded-3xl border border-[oklch(89%_0.015_326_/_72%)] bg-[oklch(99%_0.006_326_/_72%)] p-6"
         >
           <div className="h-7 w-48 animate-pulse rounded-full bg-[var(--admin-muted-bg)]" />
-          <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, itemIndex) => (
-              <div
-                key={itemIndex}
-                className="h-24 animate-pulse rounded-2xl bg-[var(--admin-muted-bg)]"
-              />
-            ))}
-          </div>
+          <div className="mt-2 h-4 w-72 max-w-full animate-pulse rounded-full bg-[var(--admin-muted-bg)]" />
         </div>
       ))}
     </div>
