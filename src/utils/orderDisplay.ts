@@ -1,5 +1,5 @@
 import { paymentMethods } from '../data/paymentMethods'
-import type { OrderStatus, PaymentMethod } from '../types/order'
+import type { Order, OrderStatus, PaymentMethod } from '../types/order'
 
 export type OperationalOrderStatus = Exclude<OrderStatus, 'cancelled'>
 
@@ -97,6 +97,14 @@ export function getPaymentLabel(method?: PaymentMethod) {
 
 export function formatOrderList(items?: string[], emptyText = 'Nenhum') {
   return items?.length ? items.join(', ') : emptyText
+}
+
+export function getOrderIceCreamFlavors(items: Order['items']) {
+  if (items.iceCreamFlavors?.length) {
+    return items.iceCreamFlavors
+  }
+
+  return items.iceCreamFlavor ? [items.iceCreamFlavor] : []
 }
 
 export function parseOrderDate(value?: unknown) {

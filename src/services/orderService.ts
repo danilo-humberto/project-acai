@@ -1,6 +1,6 @@
 import { collection, doc, onSnapshot, orderBy, query, runTransaction, serverTimestamp, updateDoc } from 'firebase/firestore'
 import { fruits } from '../data/fruits'
-import { iceCreamFlavors } from '../data/iceCreamFlavors'
+import { getIceCreamFlavorsByIds } from '../data/iceCreamFlavors'
 import { orderTypes } from '../data/orderTypes'
 import { paymentMethods } from '../data/paymentMethods'
 import { sizes } from '../data/sizes'
@@ -41,7 +41,7 @@ function removeUndefinedFields<T>(value: T): T {
 function buildOrderDocument(orderDraft: OrderDraft, publicCode: string, trackingCode: string): Order {
   const selectedOrderType = orderTypes.find((orderType) => orderType.id === orderDraft.orderTypeId)
   const selectedSize = sizes.find((size) => size.id === orderDraft.sizeId)
-  const selectedIceCreamFlavor = iceCreamFlavors.find((flavor) => flavor.id === orderDraft.iceCreamFlavorId)
+  const selectedIceCreamFlavors = getIceCreamFlavorsByIds(orderDraft.iceCreamFlavorIds)
   const selectedFruits = fruits.filter((fruit) => orderDraft.fruitIds.includes(fruit.id))
   const selectedToppings = toppings.filter((topping) => orderDraft.toppingIds.includes(topping.id))
   const selectedSyrup = syrups.find((syrup) => syrup.id === orderDraft.syrupId)
@@ -58,8 +58,10 @@ function buildOrderDocument(orderDraft: OrderDraft, publicCode: string, tracking
     items: {
       productName: selectedOrderType?.name,
       size: selectedSize?.name,
-      iceCreamFlavorId: orderDraft.iceCreamFlavorId,
-      iceCreamFlavor: selectedIceCreamFlavor?.name,
+      iceCreamFlavorIds: orderDraft.iceCreamFlavorIds,
+      iceCreamFlavors: selectedIceCreamFlavors.map((flavor) => flavor.name),
+      iceCreamFlavorId: orderDraft.iceCreamFlavorIds[0] ?? '',
+      iceCreamFlavor: selectedIceCreamFlavors[0]?.name,
       fruitIds: orderDraft.fruitIds,
       fruits: selectedFruits.map((fruit) => fruit.name),
       toppingIds: orderDraft.toppingIds,

@@ -15,7 +15,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
     order,
     selectedSize,
     selectedOrderType,
-    selectedIceCreamFlavor,
+    selectedIceCreamFlavors,
     shouldChooseIceCreamFlavor,
     selectedFruits,
     selectedToppings,
@@ -45,7 +45,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
     total,
     order.sizeId,
     order.orderTypeId,
-    order.iceCreamFlavorId,
+    order.iceCreamFlavorIds,
     order.payment.method,
     order.payment.needsChange,
     selectedFruits.length,
@@ -79,8 +79,8 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
         />
         {shouldChooseIceCreamFlavor && (
           <SummaryLine
-            label="Sabor do creme"
-            value={selectedIceCreamFlavor?.name ?? 'Não selecionado'}
+            label={selectedIceCreamFlavors.length > 1 ? 'Sabores do creme' : 'Sabor do creme'}
+            value={selectedIceCreamFlavors.map((flavor) => flavor.name).join(', ') || 'Não selecionado'}
             icon={<Snowflake size={18} />}
           />
         )}

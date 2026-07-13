@@ -5,6 +5,7 @@ import {
   canCancelOrder,
   formatOrderDate,
   formatOrderList,
+  getOrderIceCreamFlavors,
   getNextOrderActionLabel,
   getNextOrderStatus,
   getPaymentLabel,
@@ -31,6 +32,7 @@ export function OrderDetailsModal({
   const trackingUrl = `/pedido/${order.trackingCode}`;
   const nextStatus = getNextOrderStatus(order.status);
   const nextActionLabel = getNextOrderActionLabel(order.status);
+  const selectedIceCreamFlavors = getOrderIceCreamFlavors(order.items);
 
   return (
     <div
@@ -99,8 +101,11 @@ export function OrderDetailsModal({
                 label="Tamanho"
                 value={order.items.size ?? "Não informado"}
               />
-              {order.items.iceCreamFlavor && (
-                <DetailLine label="Sabor" value={order.items.iceCreamFlavor} />
+              {selectedIceCreamFlavors.length > 0 && (
+                <DetailLine
+                  label={selectedIceCreamFlavors.length > 1 ? "Sabores" : "Sabor"}
+                  value={selectedIceCreamFlavors.join(", ")}
+                />
               )}
               <DetailLine
                 label="Frutas"

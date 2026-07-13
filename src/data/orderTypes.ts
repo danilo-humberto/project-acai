@@ -19,11 +19,19 @@ export const orderTypes: OrderTypeOption[] = [
   {
     id: 'icecream',
     name: 'Só creme',
-    description: 'Um sabor de creme no pote',
+    description: 'Escolha até dois sabores de creme',
     image: orderIceCreamImage,
   },
 ]
 
 export function orderTypeNeedsIceCreamFlavor(orderTypeId: OrderTypeId | '') {
-  return orderTypeId === 'acai-icecream' || orderTypeId === 'icecream'
+  return getIceCreamFlavorLimit(orderTypeId) > 0
+}
+
+export function getIceCreamFlavorLimit(orderTypeId: OrderTypeId | '') {
+  if (orderTypeId === 'icecream') {
+    return 2
+  }
+
+  return orderTypeId === 'acai-icecream' ? 1 : 0
 }

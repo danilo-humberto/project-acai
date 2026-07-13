@@ -14,7 +14,7 @@ No painel administrativo, a loja consegue visualizar os pedidos em tempo real, a
 - Montagem de pedido em etapas.
 - Escolha de tamanho: P, M, G, Barca P ou Barca M.
 - Escolha do tipo de pedido: so acai, acai com creme ou so creme.
-- Seleção de sabor de creme quando necessario.
+- Seleção de um sabor para açaí com creme ou até dois sabores para pedidos só de creme.
 - Seleção de frutas, adicionais e calda.
 - Opcao de sem calda.
 - Dados do cliente com mascara de telefone.
@@ -196,7 +196,7 @@ cancelled
 
 1. Cliente escolhe o tamanho.
 2. Cliente escolhe o tipo do pedido.
-3. Se necessario, escolhe o sabor do creme.
+3. Se necessário, escolhe um ou até dois sabores de creme, conforme o tipo do pedido.
 4. Cliente escolhe frutas, adicionais e calda.
 5. Cliente informa nome e telefone.
 6. Cliente escolhe a forma de pagamento.

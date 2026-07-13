@@ -10,8 +10,8 @@ import {
 
 const order: OrderDraft = {
   sizeId: 'm',
-  orderTypeId: 'acai-icecream',
-  iceCreamFlavorId: 'chocomenta',
+  orderTypeId: 'icecream',
+  iceCreamFlavorIds: ['chocomenta', 'morango'],
   fruitIds: ['banana', 'morango'],
   toppingIds: ['granola', 'mms'],
   syrupId: 'chocolate',
@@ -68,7 +68,7 @@ describe('ingredientAvailability', () => {
     })
 
     expect(result.order).toMatchObject({
-      iceCreamFlavorId: '',
+      iceCreamFlavorIds: ['morango'],
       fruitIds: ['morango'],
       toppingIds: ['granola'],
       syrupId: 'sem-calda',

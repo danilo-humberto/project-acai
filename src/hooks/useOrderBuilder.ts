@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { fruits } from '../data/fruits'
-import { iceCreamFlavors } from '../data/iceCreamFlavors'
-import { orderTypeNeedsIceCreamFlavor, orderTypes } from '../data/orderTypes'
+import { getIceCreamFlavorsByIds } from '../data/iceCreamFlavors'
+import { getIceCreamFlavorLimit, orderTypeNeedsIceCreamFlavor, orderTypes } from '../data/orderTypes'
 import { sizes } from '../data/sizes'
 import { syrups } from '../data/syrups'
 import { toppings } from '../data/toppings'
@@ -26,7 +26,7 @@ import { useIngredientAvailability } from './useIngredientAvailability'
 const initialOrder: OrderDraft = {
   sizeId: '',
   orderTypeId: '',
-  iceCreamFlavorId: '',
+  iceCreamFlavorIds: [],
   fruitIds: [],
   toppingIds: [],
   syrupId: 'sem-calda',
@@ -62,9 +62,10 @@ export function useOrderBuilder() {
     [order.orderTypeId],
   )
   const shouldChooseIceCreamFlavor = orderTypeNeedsIceCreamFlavor(order.orderTypeId)
-  const selectedIceCreamFlavor = useMemo(
-    () => iceCreamFlavors.find((flavor) => flavor.id === order.iceCreamFlavorId),
-    [order.iceCreamFlavorId],
+  const maxIceCreamFlavorSelections = getIceCreamFlavorLimit(order.orderTypeId)
+  const selectedIceCreamFlavors = useMemo(
+    () => getIceCreamFlavorsByIds(order.iceCreamFlavorIds),
+    [order.iceCreamFlavorIds],
   )
   const selectedFruits = useMemo(
     () => fruits.filter((fruit) => order.fruitIds.includes(fruit.id)),
@@ -130,13 +131,14 @@ export function useOrderBuilder() {
     setOrder((current) => ({
       ...current,
       orderTypeId,
-      iceCreamFlavorId: orderTypeNeedsIceCreamFlavor(orderTypeId)
-        ? current.iceCreamFlavorId
-        : '',
+      iceCreamFlavorIds: current.iceCreamFlavorIds.slice(
+        0,
+        getIceCreamFlavorLimit(orderTypeId),
+      ),
     }))
   }
 
-  const setIceCreamFlavor = (iceCreamFlavorId: string) => {
+  const toggleIceCreamFlavor = (iceCreamFlavorId: string) => {
     if (
       !isAvailabilityReady ||
       !isIngredientAvailable(availability, 'creamFlavors', iceCreamFlavorId)
@@ -144,7 +146,17 @@ export function useOrderBuilder() {
       return
     }
 
-    setOrder((current) => ({ ...current, iceCreamFlavorId }))
+    setOrder((current) => {
+      const alreadySelected = current.iceCreamFlavorIds.includes(iceCreamFlavorId)
+      const maxSelections = getIceCreamFlavorLimit(current.orderTypeId)
+      const iceCreamFlavorIds = alreadySelected
+        ? current.iceCreamFlavorIds.filter((id) => id !== iceCreamFlavorId)
+        : current.iceCreamFlavorIds.length < maxSelections
+          ? [...current.iceCreamFlavorIds, iceCreamFlavorId]
+          : current.iceCreamFlavorIds
+
+      return { ...current, iceCreamFlavorIds }
+    })
   }
 
   const toggleFruit = (fruitId: string) => {
@@ -263,8 +275,9 @@ export function useOrderBuilder() {
     order,
     selectedSize,
     selectedOrderType,
-    selectedIceCreamFlavor,
+    selectedIceCreamFlavors,
     shouldChooseIceCreamFlavor,
+    maxIceCreamFlavorSelections,
     selectedFruits,
     selectedToppings,
     selectedSyrup,
@@ -281,7 +294,7 @@ export function useOrderBuilder() {
     availabilityNotice,
     setSize,
     setOrderType,
-    setIceCreamFlavor,
+    toggleIceCreamFlavor,
     toggleFruit,
     toggleTopping,
     setSyrup,

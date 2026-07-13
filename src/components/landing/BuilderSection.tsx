@@ -106,12 +106,13 @@ export function BuilderSection({ builder }: BuilderSectionProps) {
             {builder.shouldChooseIceCreamFlavor && (
               <IceCreamFlavorSelector
                 flavors={iceCreamFlavors}
-                selectedFlavorId={builder.order.iceCreamFlavorId}
+                selectedFlavorIds={builder.order.iceCreamFlavorIds}
+                maxSelections={builder.maxIceCreamFlavorSelections}
                 fieldErrors={builder.validation.fieldErrors}
                 unavailableFlavorIds={builder.availability.creamFlavorIds}
                 isAvailabilityReady={builder.isAvailabilityReady}
                 stepNumber={getStepNumber("icecream-flavor")}
-                onSelect={builder.setIceCreamFlavor}
+                onToggle={builder.toggleIceCreamFlavor}
               />
             )}
             <FruitSelector

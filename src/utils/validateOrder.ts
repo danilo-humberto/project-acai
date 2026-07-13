@@ -1,4 +1,4 @@
-import { orderTypeNeedsIceCreamFlavor } from '../data/orderTypes'
+import { getIceCreamFlavorLimit, orderTypeNeedsIceCreamFlavor } from '../data/orderTypes'
 import type { OrderDraft, OrderValidation, OrderValidationField } from '../types/order'
 import { getPhoneDigits, isCompletePhoneNumber } from './phone'
 
@@ -29,9 +29,19 @@ export function validateOrder(order: OrderDraft): OrderValidation {
   if (
     order.orderTypeId &&
     orderTypeNeedsIceCreamFlavor(order.orderTypeId) &&
-    !order.iceCreamFlavorId
+    order.iceCreamFlavorIds.length === 0
   ) {
-    addError(validation, 'iceCreamFlavorId', 'Escolha o sabor do creme.')
+    addError(validation, 'iceCreamFlavorIds', 'Escolha pelo menos um sabor de creme.')
+  } else if (
+    order.orderTypeId === 'acai-icecream' &&
+    order.iceCreamFlavorIds.length > getIceCreamFlavorLimit(order.orderTypeId)
+  ) {
+    addError(validation, 'iceCreamFlavorIds', 'Escolha apenas um sabor para o açaí com creme.')
+  } else if (
+    order.orderTypeId === 'icecream' &&
+    order.iceCreamFlavorIds.length > getIceCreamFlavorLimit(order.orderTypeId)
+  ) {
+    addError(validation, 'iceCreamFlavorIds', 'Escolha no máximo dois sabores de creme.')
   }
 
   if (!order.customer.name.trim()) {

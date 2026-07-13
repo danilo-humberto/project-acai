@@ -55,7 +55,7 @@ export type PaymentData = {
 export type OrderDraft = {
   sizeId: string
   orderTypeId: OrderTypeId | ''
-  iceCreamFlavorId: string
+  iceCreamFlavorIds: string[]
   fruitIds: string[]
   toppingIds: string[]
   syrupId: string
@@ -80,6 +80,8 @@ export type Order = {
   items: {
     productName?: string
     size?: string
+    iceCreamFlavorIds?: string[]
+    iceCreamFlavors?: string[]
     iceCreamFlavorId?: string
     iceCreamFlavor?: string
     fruitIds?: string[]
@@ -109,7 +111,7 @@ export type OrderConfirmationData = {
 export type OrderValidationField =
   | 'sizeId'
   | 'orderTypeId'
-  | 'iceCreamFlavorId'
+  | 'iceCreamFlavorIds'
   | 'customer.name'
   | 'customer.phone'
   | 'payment.method'

@@ -93,7 +93,7 @@ export function getUnavailableOrderIngredients(
   availability: IngredientAvailability,
 ): UnavailableOrderIngredient[] {
   const selectedByCategory: Record<IngredientCategory, string[]> = {
-    creamFlavors: order.iceCreamFlavorId ? [order.iceCreamFlavorId] : [],
+    creamFlavors: order.iceCreamFlavorIds,
     fruits: order.fruitIds,
     toppings: order.toppingIds,
     syrups: order.syrupId ? [order.syrupId] : [],
@@ -127,9 +127,9 @@ export function removeUnavailableIngredients(
   return {
     order: {
       ...order,
-      iceCreamFlavorId: unavailableIds.has(`creamFlavors:${order.iceCreamFlavorId}`)
-        ? ''
-        : order.iceCreamFlavorId,
+      iceCreamFlavorIds: order.iceCreamFlavorIds.filter(
+        (id) => !unavailableIds.has(`creamFlavors:${id}`),
+      ),
       fruitIds: order.fruitIds.filter((id) => !unavailableIds.has(`fruits:${id}`)),
       toppingIds: order.toppingIds.filter((id) => !unavailableIds.has(`toppings:${id}`)),
       syrupId: unavailableIds.has(`syrups:${order.syrupId}`) ? 'sem-calda' : order.syrupId,

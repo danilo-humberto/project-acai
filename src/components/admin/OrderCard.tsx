@@ -6,6 +6,7 @@ import {
   canCancelOrder,
   formatOrderList,
   formatOrderShortDateTime,
+  getOrderIceCreamFlavors,
   getNextOrderActionLabel,
   getNextOrderStatus,
   orderStatusTheme,
@@ -25,9 +26,12 @@ export function OrderCard({ order, isUpdating, onOpenDetails, onStatusChange }: 
   const isCompleted = order.status === 'completed'
   const itemSummary = `${order.items.size ?? 'Sem tamanho'} • ${order.items.productName ?? 'Produto não informado'}`
   const detailsSummary = formatOrderList(
-    [order.items.iceCreamFlavor, ...(order.items.fruits ?? []), ...(order.items.toppings ?? []), order.items.syrup].filter(
-      Boolean,
-    ) as string[],
+    [
+      ...getOrderIceCreamFlavors(order.items),
+      ...(order.items.fruits ?? []),
+      ...(order.items.toppings ?? []),
+      order.items.syrup,
+    ].filter(Boolean) as string[],
     'Sem complementos',
   )
 

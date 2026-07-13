@@ -67,3 +67,9 @@ export const iceCreamFlavors: IceCreamFlavorOption[] = [
     description: 'Cremoso regional',
   },
 ]
+
+export function getIceCreamFlavorsByIds(flavorIds: string[]) {
+  return flavorIds
+    .map((flavorId) => iceCreamFlavors.find((flavor) => flavor.id === flavorId))
+    .filter((flavor): flavor is IceCreamFlavorOption => Boolean(flavor))
+}

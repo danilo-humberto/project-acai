@@ -5,7 +5,7 @@ import { calculateOrderTotal } from './calculateOrderTotal'
 const baseOrder: OrderDraft = {
   sizeId: '',
   orderTypeId: '',
-  iceCreamFlavorId: '',
+  iceCreamFlavorIds: [],
   fruitIds: [],
   toppingIds: [],
   syrupId: 'sem-calda',

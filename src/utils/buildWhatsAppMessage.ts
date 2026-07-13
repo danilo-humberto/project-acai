@@ -1,5 +1,5 @@
 import { fruits } from '../data/fruits'
-import { iceCreamFlavors } from '../data/iceCreamFlavors'
+import { getIceCreamFlavorsByIds } from '../data/iceCreamFlavors'
 import { orderTypeNeedsIceCreamFlavor, orderTypes } from '../data/orderTypes'
 import { paymentMethods } from '../data/paymentMethods'
 import { sizes } from '../data/sizes'
@@ -21,7 +21,7 @@ function toBulletList(items: string[]) {
 export function buildWhatsAppMessage(order: OrderDraft, store: StoreConfig) {
   const selectedSize = sizes.find((size) => size.id === order.sizeId)
   const selectedOrderType = orderTypes.find((orderType) => orderType.id === order.orderTypeId)
-  const selectedIceCreamFlavor = iceCreamFlavors.find((flavor) => flavor.id === order.iceCreamFlavorId)
+  const selectedIceCreamFlavors = getIceCreamFlavorsByIds(order.iceCreamFlavorIds)
   const selectedFruits = fruits.filter((fruit) => order.fruitIds.includes(fruit.id))
   const selectedToppings = toppings.filter((topping) => order.toppingIds.includes(topping.id))
   const selectedSyrup = syrups.find((syrup) => syrup.id === order.syrupId)
@@ -43,7 +43,7 @@ export function buildWhatsAppMessage(order: OrderDraft, store: StoreConfig) {
     `Tamanho: ${selectedSize?.name ?? 'Não informado'}`,
     `Tipo do pedido: ${selectedOrderType?.name ?? 'Não informado'}`,
     orderTypeNeedsIceCreamFlavor(order.orderTypeId)
-      ? `Sabor do creme: ${selectedIceCreamFlavor?.name ?? 'Não informado'}`
+      ? `${selectedIceCreamFlavors.length > 1 ? 'Sabores' : 'Sabor'} do creme: ${selectedIceCreamFlavors.map((flavor) => flavor.name).join(', ') || 'Não informado'}`
       : '',
     '',
     'Frutas:',

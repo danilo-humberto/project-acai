@@ -14,6 +14,7 @@ import { paymentMethods } from '../data/paymentMethods'
 import { listenOrderByTrackingCode } from '../services/orderService'
 import type { Order, OrderStatus } from '../types/order'
 import { formatCurrency } from '../utils/formatCurrency'
+import { getOrderIceCreamFlavors } from '../utils/orderDisplay'
 
 const statusSteps: Array<{
   id: Exclude<OrderStatus, 'cancelled'>
@@ -107,6 +108,7 @@ export function TrackingPage() {
   }, [trackingCode])
 
   const status = order?.status ?? 'received'
+  const selectedIceCreamFlavors = order ? getOrderIceCreamFlavors(order.items) : []
 
   return (
     <div className="tracking-page-bg min-h-dvh text-[var(--ink-900)]">
@@ -203,7 +205,12 @@ export function TrackingPage() {
                     <div className="mt-4 space-y-3 text-sm leading-6 text-[var(--ink-700)]">
                       <InfoLine label="Produto" value={order.items.productName ?? 'Não informado'} />
                       <InfoLine label="Tamanho" value={order.items.size ?? 'Não informado'} />
-                      {order.items.iceCreamFlavor && <InfoLine label="Sabor" value={order.items.iceCreamFlavor} />}
+                      {selectedIceCreamFlavors.length > 0 && (
+                        <InfoLine
+                          label={selectedIceCreamFlavors.length > 1 ? 'Sabores' : 'Sabor'}
+                          value={selectedIceCreamFlavors.join(', ')}
+                        />
+                      )}
                       <InfoLine label="Frutas" value={formatItems(order.items.fruits)} />
                       <InfoLine label="Adicionais" value={formatItems(order.items.toppings)} />
                       <InfoLine label="Calda" value={order.items.syrup ?? 'Sem calda'} />

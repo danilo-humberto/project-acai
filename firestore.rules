@@ -36,12 +36,20 @@ service cloud.firestore {
 
     function orderContainsIngredientIds() {
       return request.resource.data.items.keys().hasAll([
+          'iceCreamFlavorIds',
           'iceCreamFlavorId',
           'fruitIds',
           'toppingIds',
           'syrupId'
         ])
+        && request.resource.data.items.iceCreamFlavorIds is list
+        && request.resource.data.items.iceCreamFlavorIds.size() <= 2
         && request.resource.data.items.iceCreamFlavorId is string
+        && (
+          request.resource.data.items.iceCreamFlavorIds.size() == 0
+            ? request.resource.data.items.iceCreamFlavorId == ''
+            : request.resource.data.items.iceCreamFlavorId == request.resource.data.items.iceCreamFlavorIds[0]
+        )
         && request.resource.data.items.fruitIds is list
         && request.resource.data.items.toppingIds is list
         && request.resource.data.items.syrupId is string;
@@ -49,7 +57,7 @@ service cloud.firestore {
 
     function selectedIngredientsAreAvailable() {
       return !exists(/databases/$(database)/documents/storeSettings/ingredientAvailability) || (
-        !(request.resource.data.items.iceCreamFlavorId in get(/databases/$(database)/documents/storeSettings/ingredientAvailability).data.creamFlavorIds)
+        !request.resource.data.items.iceCreamFlavorIds.hasAny(get(/databases/$(database)/documents/storeSettings/ingredientAvailability).data.creamFlavorIds)
         && !request.resource.data.items.fruitIds.hasAny(get(/databases/$(database)/documents/storeSettings/ingredientAvailability).data.fruitIds)
         && !request.resource.data.items.toppingIds.hasAny(get(/databases/$(database)/documents/storeSettings/ingredientAvailability).data.toppingIds)
         && !(request.resource.data.items.syrupId in get(/databases/$(database)/documents/storeSettings/ingredientAvailability).data.syrupIds)
