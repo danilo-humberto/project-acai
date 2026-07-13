@@ -128,6 +128,7 @@ export function BuilderSection({ builder }: BuilderSectionProps) {
             <ToppingSelector
               toppings={toppings}
               selections={builder.order.toppingSelections}
+              selectedSizeId={builder.order.sizeId}
               unavailableToppingIds={builder.availability.toppingIds}
               isAvailabilityReady={builder.isAvailabilityReady}
               stepNumber={getStepNumber("toppings")}

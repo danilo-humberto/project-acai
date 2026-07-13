@@ -22,6 +22,10 @@ import {
 } from '../utils/ingredientAvailability'
 import { validateOrder } from '../utils/validateOrder'
 import {
+  filterToppingSelectionsForSize,
+  isToppingAllowedForSize,
+} from '../utils/toppingCompatibility'
+import {
   buildPortionOrderItems,
   decrementPortionSelection,
   incrementPortionSelection,
@@ -131,7 +135,11 @@ export function useOrderBuilder() {
   }, [availability, isAvailabilityReady, order])
 
   const setSize = (sizeId: string) => {
-    setOrder((current) => ({ ...current, sizeId }))
+    setOrder((current) => ({
+      ...current,
+      sizeId,
+      toppingSelections: filterToppingSelectionsForSize(sizeId, current.toppingSelections),
+    }))
   }
 
   const setOrderType = (orderTypeId: OrderTypeId) => {
@@ -203,6 +211,10 @@ export function useOrderBuilder() {
     }
 
     setOrder((current) => {
+      if (!isToppingAllowedForSize(current.sizeId, toppingId)) {
+        return current
+      }
+
       return {
         ...current,
         toppingSelections: togglePortionSelection(current.toppingSelections, toppingId),
@@ -215,10 +227,16 @@ export function useOrderBuilder() {
       return
     }
 
-    setOrder((current) => ({
-      ...current,
-      toppingSelections: incrementPortionSelection(current.toppingSelections, toppingId),
-    }))
+    setOrder((current) => {
+      if (!isToppingAllowedForSize(current.sizeId, toppingId)) {
+        return current
+      }
+
+      return {
+        ...current,
+        toppingSelections: incrementPortionSelection(current.toppingSelections, toppingId),
+      }
+    })
   }
 
   const decrementTopping = (toppingId: string) => {

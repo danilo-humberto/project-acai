@@ -125,6 +125,7 @@ export type OrderValidationField =
   | 'sizeId'
   | 'orderTypeId'
   | 'iceCreamFlavorIds'
+  | 'toppingSelections'
   | 'customer.name'
   | 'customer.phone'
   | 'payment.method'

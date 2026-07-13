@@ -1,6 +1,7 @@
 import { getIceCreamFlavorLimit, orderTypeNeedsIceCreamFlavor } from '../data/orderTypes'
 import type { OrderDraft, OrderValidation, OrderValidationField } from '../types/order'
 import { getPhoneDigits, isCompletePhoneNumber } from './phone'
+import { getDisallowedToppingIdsForSize } from './toppingCompatibility'
 
 function addError(
   validation: OrderValidation,
@@ -42,6 +43,14 @@ export function validateOrder(order: OrderDraft): OrderValidation {
     order.iceCreamFlavorIds.length > getIceCreamFlavorLimit(order.orderTypeId)
   ) {
     addError(validation, 'iceCreamFlavorIds', 'Escolha no máximo dois sabores de creme.')
+  }
+
+  if (getDisallowedToppingIdsForSize(order.sizeId, order.toppingSelections).length > 0) {
+    addError(
+      validation,
+      'toppingSelections',
+      'Paçoca e Canudo não estão disponíveis para o pote P.',
+    )
   }
 
   if (!order.customer.name.trim()) {

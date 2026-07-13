@@ -38,6 +38,7 @@ service cloud.firestore {
       return request.resource.data.items.keys().hasAll([
           'iceCreamFlavorIds',
           'iceCreamFlavorId',
+          'size',
           'fruitIds',
           'toppingIds',
           'syrupId'
@@ -45,6 +46,7 @@ service cloud.firestore {
         && request.resource.data.items.iceCreamFlavorIds is list
         && request.resource.data.items.iceCreamFlavorIds.size() <= 2
         && request.resource.data.items.iceCreamFlavorId is string
+        && request.resource.data.items.size is string
         && (
           request.resource.data.items.iceCreamFlavorIds.size() == 0
             ? request.resource.data.items.iceCreamFlavorId == ''
@@ -62,6 +64,11 @@ service cloud.firestore {
         && !request.resource.data.items.toppingIds.hasAny(get(/databases/$(database)/documents/storeSettings/ingredientAvailability).data.toppingIds)
         && !(request.resource.data.items.syrupId in get(/databases/$(database)/documents/storeSettings/ingredientAvailability).data.syrupIds)
       );
+    }
+
+    function selectedToppingsMatchSize() {
+      return request.resource.data.items.size != 'P'
+        || !request.resource.data.items.toppingIds.hasAny(['pacoca', 'canudo']);
     }
 
     function hasValidNewOrderShape(orderId) {
@@ -105,7 +112,8 @@ service cloud.firestore {
       allow list: if isAdmin();
       allow create: if hasValidNewOrderShape(orderId)
         && orderContainsIngredientIds()
-        && selectedIngredientsAreAvailable();
+        && selectedIngredientsAreAvailable()
+        && selectedToppingsMatchSize();
       allow update: if isAdmin();
       allow delete: if false;
     }

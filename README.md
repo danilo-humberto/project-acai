@@ -17,6 +17,7 @@ No painel administrativo, a loja consegue visualizar os pedidos em tempo real, a
 - Seleção de um sabor para açaí com creme ou até dois sabores para pedidos só de creme.
 - Seleção livre de frutas e guloseimas, com controle de quantidade por item.
 - Primeira porção de cada fruta ou guloseima incluída e porções extras por R$ 0,50.
+- Paçoca e Canudo indisponíveis para pedidos no pote P.
 - Opcao de sem calda.
 - Dados do cliente com mascara de telefone.
 - Forma de pagamento com suporte a Pix, cartao e dinheiro.

@@ -65,3 +65,31 @@ describe('validateOrder cream flavors', () => {
     )
   })
 })
+
+describe('validateOrder topping compatibility', () => {
+  it.each(['pacoca', 'canudo'])('rejeita %s no pote P', (toppingId) => {
+    const validation = validateOrder({
+      ...validOrder,
+      sizeId: 'p',
+      toppingSelections: [{ id: toppingId, quantity: 1 }],
+    })
+
+    expect(validation.fieldErrors.toppingSelections).toBe(
+      'Paçoca e Canudo não estão disponíveis para o pote P.',
+    )
+  })
+
+  it('permite Paçoca e Canudo nos demais tamanhos', () => {
+    const validation = validateOrder({
+      ...validOrder,
+      sizeId: 'm',
+      toppingSelections: [
+        { id: 'pacoca', quantity: 1 },
+        { id: 'canudo', quantity: 2 },
+      ],
+    })
+
+    expect(validation.fieldErrors.toppingSelections).toBeUndefined()
+    expect(validation.isValid).toBe(true)
+  })
+})
