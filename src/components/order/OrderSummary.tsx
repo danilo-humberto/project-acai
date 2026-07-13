@@ -67,9 +67,9 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
 
       <div ref={summaryBodyRef} className="space-y-4 p-4 sm:p-5">
         <SummaryLine
-          label="Tamanho do pote"
+          label="Tamanho"
           value={selectedSize?.name ?? 'Não selecionado'}
-          price={selectedSize && order.orderTypeId ? total : undefined}
+          price={selectedSize ? total : undefined}
           icon={<ClipboardList size={18} />}
         />
         <SummaryLine

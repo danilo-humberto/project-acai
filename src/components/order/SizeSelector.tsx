@@ -1,11 +1,9 @@
-import { getSizePrice } from '../../data/sizes'
-import type { OrderTypeId, OrderValidation, SizeOption } from '../../types/order'
+import type { OrderValidation, SizeOption } from '../../types/order'
 import { OptionCard } from '../ui/OptionCard'
 
 type SizeSelectorProps = {
   sizes: SizeOption[]
   selectedSizeId: string
-  selectedOrderTypeId: OrderTypeId | ''
   fieldErrors: OrderValidation['fieldErrors']
   stepNumber: number
   onSelect: (sizeId: string) => void
@@ -14,7 +12,6 @@ type SizeSelectorProps = {
 export function SizeSelector({
   sizes,
   selectedSizeId,
-  selectedOrderTypeId,
   fieldErrors,
   stepNumber,
   onSelect,
@@ -23,7 +20,7 @@ export function SizeSelector({
     <section id="builder-size" className="scroll-mt-28">
       <div className="mb-5">
         <p className="text-sm font-extrabold text-[var(--leaf-700)]">{stepNumber}. Escolha o tamanho</p>
-        <h3 className="break-words font-display text-3xl font-extrabold leading-tight text-[var(--ink-900)]">Qual vai ser o pote?</h3>
+        <h3 className="break-words font-display text-3xl font-extrabold leading-tight text-[var(--ink-900)]">Qual vai ser o tamanho?</h3>
       </div>
       <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-3">
         {sizes.map((size) => (
@@ -31,7 +28,7 @@ export function SizeSelector({
             key={size.id}
             title={size.name}
             description={size.description}
-            price={selectedOrderTypeId ? getSizePrice(size, selectedOrderTypeId) : undefined}
+            price={size.price}
             image={size.image}
             selected={size.id === selectedSizeId}
             onClick={() => onSelect(size.id)}

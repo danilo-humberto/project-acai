@@ -8,7 +8,6 @@ export type PricedOption = {
 
 export type SizeOption = PricedOption & {
   volume: string
-  creamPrice: number
 }
 
 export type OrderTypeId = 'acai' | 'acai-icecream' | 'icecream'

@@ -19,7 +19,7 @@ export function validateOrder(order: OrderDraft): OrderValidation {
   }
 
   if (!order.sizeId) {
-    addError(validation, 'sizeId', 'Escolha o tamanho do pote.')
+    addError(validation, 'sizeId', 'Escolha o tamanho.')
   }
 
   if (!order.orderTypeId) {

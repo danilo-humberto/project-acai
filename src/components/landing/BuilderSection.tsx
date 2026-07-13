@@ -43,7 +43,7 @@ export function BuilderSection({ builder }: BuilderSectionProps) {
         <SectionTitle
           eyebrow="Monte do seu jeito"
           title="Monte seu açaí"
-          description="Escolha o tipo do pedido, o tamanho do pote, complementos, calda e pagamento para retirada no local."
+          description="Escolha o tamanho, o tipo do pedido, complementos, calda e pagamento para retirada no local."
         />
 
         <div
@@ -76,20 +76,19 @@ export function BuilderSection({ builder }: BuilderSectionProps) {
           </aside>
 
           <main className="builder-main-panel min-w-0 space-y-12 overflow-x-hidden rounded-3xl p-4 text-(--ink-900) panel-shadow sm:p-6 lg:p-8">
+            <SizeSelector
+              sizes={sizes}
+              selectedSizeId={builder.order.sizeId}
+              fieldErrors={builder.validation.fieldErrors}
+              stepNumber={getStepNumber("size")}
+              onSelect={builder.setSize}
+            />
             <OrderTypeSelector
               orderTypes={orderTypes}
               selectedOrderTypeId={builder.order.orderTypeId}
               fieldErrors={builder.validation.fieldErrors}
               stepNumber={getStepNumber("order-type")}
               onSelect={builder.setOrderType}
-            />
-            <SizeSelector
-              sizes={sizes}
-              selectedSizeId={builder.order.sizeId}
-              selectedOrderTypeId={builder.order.orderTypeId}
-              fieldErrors={builder.validation.fieldErrors}
-              stepNumber={getStepNumber("size")}
-              onSelect={builder.setSize}
             />
             {(builder.availabilityError || builder.availabilityNotice) && (
               <div

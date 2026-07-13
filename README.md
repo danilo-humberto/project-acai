@@ -12,7 +12,7 @@ No painel administrativo, a loja consegue visualizar os pedidos em tempo real, a
 
 - Landing page responsiva com hero, chamada principal e contato.
 - Montagem de pedido em etapas.
-- Escolha de tamanho do pote: P, M ou G.
+- Escolha de tamanho: P, M, G, Barca P ou Barca M.
 - Escolha do tipo de pedido: so acai, acai com creme ou so creme.
 - Seleção de sabor de creme quando necessario.
 - Seleção de frutas, adicionais e calda.
@@ -194,8 +194,8 @@ cancelled
 
 ## Fluxo do Pedido
 
-1. Cliente escolhe o tipo do pedido.
-2. Cliente escolhe o tamanho do pote.
+1. Cliente escolhe o tamanho.
+2. Cliente escolhe o tipo do pedido.
 3. Se necessario, escolhe o sabor do creme.
 4. Cliente escolhe frutas, adicionais e calda.
 5. Cliente informa nome e telefone.

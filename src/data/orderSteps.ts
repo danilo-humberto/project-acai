@@ -2,14 +2,14 @@ import type { OrderStep } from '../types/order'
 
 export const orderSteps: OrderStep[] = [
   {
+    id: 'size',
+    title: 'Tamanho',
+    description: 'Pote ou barca',
+  },
+  {
     id: 'order-type',
     title: 'Tipo',
     description: 'Açaí ou creme',
-  },
-  {
-    id: 'size',
-    title: 'Tamanho',
-    description: 'P, M ou G',
   },
   {
     id: 'icecream-flavor',
