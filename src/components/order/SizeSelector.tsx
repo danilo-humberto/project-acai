@@ -22,17 +22,21 @@ export function SizeSelector({
         <p className="text-sm font-extrabold text-[var(--leaf-700)]">{stepNumber}. Escolha o tamanho</p>
         <h3 className="break-words font-display text-3xl font-extrabold leading-tight text-[var(--ink-900)]">Qual vai ser o tamanho?</h3>
       </div>
-      <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-6">
         {sizes.map((size) => (
-          <OptionCard
+          <div
             key={size.id}
-            title={size.name}
-            description={size.description}
-            price={size.price}
-            image={size.image}
-            selected={size.id === selectedSizeId}
-            onClick={() => onSelect(size.id)}
-          />
+            className={size.id.startsWith('barca-') ? 'sm:col-span-3' : 'sm:col-span-2'}
+          >
+            <OptionCard
+              title={size.name}
+              description={size.description}
+              price={size.price}
+              image={size.image}
+              selected={size.id === selectedSizeId}
+              onClick={() => onSelect(size.id)}
+            />
+          </div>
         ))}
       </div>
       {fieldErrors.sizeId && (
