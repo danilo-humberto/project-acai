@@ -33,7 +33,7 @@ export function PortionCard({
   return (
     <article
       className={cn(
-        'touch-card min-h-24 min-w-0 overflow-hidden rounded-2xl border transition duration-300 ease-out',
+        'touch-card min-h-24 min-w-0 self-start overflow-hidden rounded-2xl border transition duration-300 ease-out',
         disabled
           ? 'border-[var(--cream-200)] bg-[var(--cream-100)] opacity-65'
           : selected
