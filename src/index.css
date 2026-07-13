@@ -207,11 +207,11 @@ a {
 }
 
 @media (hover: hover) {
-  .button-plum:hover {
+  .button-plum:not(:disabled):hover {
     background: var(--plum-700);
   }
 
-  .button-leaf:hover {
+  .button-leaf:not(:disabled):hover {
     background: var(--leaf-600);
   }
 }

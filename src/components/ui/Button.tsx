@@ -22,8 +22,15 @@ type ButtonProps = {
 const variantClasses: Record<ButtonVariant, string> = {
   plum: 'button-plum',
   leaf: 'button-leaf',
-  soft: 'bg-[var(--cream-50)] text-[var(--ink-900)] shadow-[0_16px_36px_oklch(20%_0.04_326_/_10%)] hover:bg-[var(--cream-100)]',
-  ghost: 'border border-[oklch(98%_0.01_326_/_16%)] text-[var(--cream-50)] hover:bg-[oklch(98%_0.01_326_/_8%)]',
+  soft: 'bg-[var(--cream-50)] text-[var(--ink-900)] shadow-[0_16px_36px_oklch(20%_0.04_326_/_10%)]',
+  ghost: 'border border-[oklch(98%_0.01_326_/_16%)] text-[var(--cream-50)]',
+}
+
+const interactiveVariantClasses: Record<ButtonVariant, string> = {
+  plum: '',
+  leaf: '',
+  soft: 'hover:bg-[var(--cream-100)]',
+  ghost: 'hover:bg-[oklch(98%_0.01_326_/_8%)]',
 }
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -47,10 +54,15 @@ export function Button({
   disabled = false,
 }: ButtonProps) {
   const classes = cn(
-    'inline-flex items-center justify-center gap-2 rounded-2xl py-3 font-extrabold transition duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--leaf-500)]',
+    'inline-flex items-center justify-center gap-2 rounded-2xl py-3 font-extrabold transition duration-300 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--leaf-500)]',
     variantClasses[variant],
     sizeClasses[size],
-    disabled && 'cursor-not-allowed',
+    disabled
+      ? 'cursor-not-allowed'
+      : cn(
+          'hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]',
+          interactiveVariantClasses[variant],
+        ),
     className,
   )
 
