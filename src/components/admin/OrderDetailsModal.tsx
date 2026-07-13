@@ -4,8 +4,10 @@ import { formatCurrency } from "../../utils/formatCurrency";
 import {
   canCancelOrder,
   formatOrderDate,
-  formatOrderList,
+  formatOrderPortions,
+  getOrderFruitPortions,
   getOrderIceCreamFlavors,
+  getOrderToppingPortions,
   getNextOrderActionLabel,
   getNextOrderStatus,
   getPaymentLabel,
@@ -111,11 +113,11 @@ export function OrderDetailsModal({
               )}
               <DetailLine
                 label="Frutas"
-                value={formatOrderList(order.items.fruits)}
+                value={formatOrderPortions(getOrderFruitPortions(order.items))}
               />
               <DetailLine
                 label="Guloseimas"
-                value={formatOrderList(order.items.toppings)}
+                value={formatOrderPortions(getOrderToppingPortions(order.items))}
               />
               <DetailLine
                 label="Calda"

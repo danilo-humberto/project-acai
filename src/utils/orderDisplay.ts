@@ -1,5 +1,6 @@
 import { paymentMethods } from '../data/paymentMethods'
-import type { Order, OrderStatus, PaymentMethod } from '../types/order'
+import type { Order, OrderStatus, PaymentMethod, PortionOrderItem } from '../types/order'
+import { formatCurrency } from './formatCurrency'
 
 export type OperationalOrderStatus = Exclude<OrderStatus, 'cancelled'>
 
@@ -97,6 +98,47 @@ export function getPaymentLabel(method?: PaymentMethod) {
 
 export function formatOrderList(items?: string[], emptyText = 'Nenhum') {
   return items?.length ? items.join(', ') : emptyText
+}
+
+function getOrderPortions(
+  portions: PortionOrderItem[] | undefined,
+  legacyNames: string[] | undefined,
+): PortionOrderItem[] {
+  if (portions?.length) {
+    return portions
+  }
+
+  return (legacyNames ?? []).map((name, index) => ({
+    id: `legacy-${index}`,
+    name,
+    quantity: 1,
+    extraUnitPriceCents: 0,
+    extraSubtotalCents: 0,
+  }))
+}
+
+export function getOrderFruitPortions(items: Order['items']) {
+  return getOrderPortions(items.fruitPortions, items.fruits)
+}
+
+export function getOrderToppingPortions(items: Order['items']) {
+  return getOrderPortions(items.toppingPortions, items.toppings)
+}
+
+export function formatOrderPortions(portions: PortionOrderItem[], emptyText = 'Nenhum') {
+  if (portions.length === 0) {
+    return emptyText
+  }
+
+  return portions
+    .map((portion) => {
+      const extraText = portion.extraSubtotalCents
+        ? ` (+ ${formatCurrency(portion.extraSubtotalCents / 100)})`
+        : ''
+
+      return `${portion.name} ${portion.quantity}x${extraText}`
+    })
+    .join(', ')
 }
 
 export function getOrderIceCreamFlavors(items: Order['items']) {

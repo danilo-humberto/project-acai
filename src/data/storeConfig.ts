@@ -3,7 +3,6 @@ import type { StoreConfig } from "../types/store";
 export const storeConfig: StoreConfig = {
   name: "Shalom Açaí",
   shortName: "Shalom Açaí",
-  whatsappNumber: "81984675961",
   address: {
     street: "Av. Aníbal benévolo nº423",
     city: "Recife",

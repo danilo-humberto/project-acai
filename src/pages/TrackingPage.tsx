@@ -14,7 +14,12 @@ import { paymentMethods } from '../data/paymentMethods'
 import { listenOrderByTrackingCode } from '../services/orderService'
 import type { Order, OrderStatus } from '../types/order'
 import { formatCurrency } from '../utils/formatCurrency'
-import { getOrderIceCreamFlavors } from '../utils/orderDisplay'
+import {
+  formatOrderPortions,
+  getOrderFruitPortions,
+  getOrderIceCreamFlavors,
+  getOrderToppingPortions,
+} from '../utils/orderDisplay'
 
 const statusSteps: Array<{
   id: Exclude<OrderStatus, 'cancelled'>
@@ -53,10 +58,6 @@ const statusLabels: Record<OrderStatus, string> = {
 
 function getPaymentLabel(method?: Order['payment']['method']) {
   return paymentMethods.find((paymentMethod) => paymentMethod.id === method)?.name ?? 'Não informado'
-}
-
-function formatItems(items?: string[]) {
-  return items?.length ? items.join(', ') : 'Nenhum'
 }
 
 function getStatusStepStyle(status: OrderStatus, stepId: Exclude<OrderStatus, 'cancelled'>) {
@@ -211,8 +212,14 @@ export function TrackingPage() {
                           value={selectedIceCreamFlavors.join(', ')}
                         />
                       )}
-                      <InfoLine label="Frutas" value={formatItems(order.items.fruits)} />
-                      <InfoLine label="Adicionais" value={formatItems(order.items.toppings)} />
+                      <InfoLine
+                        label="Frutas"
+                        value={formatOrderPortions(getOrderFruitPortions(order.items))}
+                      />
+                      <InfoLine
+                        label="Guloseimas"
+                        value={formatOrderPortions(getOrderToppingPortions(order.items))}
+                      />
                       <InfoLine label="Calda" value={order.items.syrup ?? 'Sem calda'} />
                       <InfoLine label="Observação" value={order.items.observation ?? 'Sem observação'} />
                     </div>

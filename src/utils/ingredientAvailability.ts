@@ -9,6 +9,7 @@ import type {
   IngredientCategory,
 } from '../types/availability'
 import type { OrderDraft } from '../types/order'
+import { getPortionSelectionIds } from './portionSelections'
 
 export const emptyIngredientAvailability: IngredientAvailability = {
   creamFlavorIds: [],
@@ -39,8 +40,8 @@ export const availabilityCategories: AvailabilityCategoryDefinition[] = [
   },
   {
     id: 'toppings',
-    title: 'Adicionais',
-    description: 'Coberturas e complementos do açaí.',
+    title: 'Guloseimas',
+    description: 'Guloseimas e complementos do açaí.',
     items: toppings,
   },
   {
@@ -94,8 +95,8 @@ export function getUnavailableOrderIngredients(
 ): UnavailableOrderIngredient[] {
   const selectedByCategory: Record<IngredientCategory, string[]> = {
     creamFlavors: order.iceCreamFlavorIds,
-    fruits: order.fruitIds,
-    toppings: order.toppingIds,
+    fruits: getPortionSelectionIds(order.fruitSelections),
+    toppings: getPortionSelectionIds(order.toppingSelections),
     syrups: order.syrupId ? [order.syrupId] : [],
   }
 
@@ -130,8 +131,12 @@ export function removeUnavailableIngredients(
       iceCreamFlavorIds: order.iceCreamFlavorIds.filter(
         (id) => !unavailableIds.has(`creamFlavors:${id}`),
       ),
-      fruitIds: order.fruitIds.filter((id) => !unavailableIds.has(`fruits:${id}`)),
-      toppingIds: order.toppingIds.filter((id) => !unavailableIds.has(`toppings:${id}`)),
+      fruitSelections: order.fruitSelections.filter(
+        (selection) => !unavailableIds.has(`fruits:${selection.id}`),
+      ),
+      toppingSelections: order.toppingSelections.filter(
+        (selection) => !unavailableIds.has(`toppings:${selection.id}`),
+      ),
       syrupId: unavailableIds.has(`syrups:${order.syrupId}`) ? 'sem-calda' : order.syrupId,
     },
     removedItems: unavailableItems,

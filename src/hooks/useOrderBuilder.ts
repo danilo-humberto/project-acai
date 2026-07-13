@@ -13,7 +13,7 @@ import type {
   PaymentData,
   PaymentMethod,
 } from '../types/order'
-import { calculateOrderTotal } from '../utils/calculateOrderTotal'
+import { calculateExtraPortionsTotal, calculateOrderTotal } from '../utils/calculateOrderTotal'
 import {
   getUnavailableOrderIngredients,
   isIngredientAvailable,
@@ -21,14 +21,20 @@ import {
   UnavailableIngredientsError,
 } from '../utils/ingredientAvailability'
 import { validateOrder } from '../utils/validateOrder'
+import {
+  buildPortionOrderItems,
+  decrementPortionSelection,
+  incrementPortionSelection,
+  togglePortionSelection,
+} from '../utils/portionSelections'
 import { useIngredientAvailability } from './useIngredientAvailability'
 
 const initialOrder: OrderDraft = {
   sizeId: '',
   orderTypeId: '',
   iceCreamFlavorIds: [],
-  fruitIds: [],
-  toppingIds: [],
+  fruitSelections: [],
+  toppingSelections: [],
   syrupId: 'sem-calda',
   observation: '',
   customer: {
@@ -68,12 +74,12 @@ export function useOrderBuilder() {
     [order.iceCreamFlavorIds],
   )
   const selectedFruits = useMemo(
-    () => fruits.filter((fruit) => order.fruitIds.includes(fruit.id)),
-    [order.fruitIds],
+    () => buildPortionOrderItems(fruits, order.fruitSelections),
+    [order.fruitSelections],
   )
   const selectedToppings = useMemo(
-    () => toppings.filter((topping) => order.toppingIds.includes(topping.id)),
-    [order.toppingIds],
+    () => buildPortionOrderItems(toppings, order.toppingSelections),
+    [order.toppingSelections],
   )
   const selectedSyrup = useMemo(
     () =>
@@ -84,6 +90,7 @@ export function useOrderBuilder() {
   )
 
   const total = useMemo(() => calculateOrderTotal(order), [order])
+  const extraPortionsTotal = useMemo(() => calculateExtraPortionsTotal(order), [order])
   const validation = useMemo(() => {
     const currentValidation = validateOrder(order)
 
@@ -165,15 +172,29 @@ export function useOrderBuilder() {
     }
 
     setOrder((current) => {
-      const alreadySelected = current.fruitIds.includes(fruitId)
-      const fruitIds = alreadySelected
-        ? current.fruitIds.filter((id) => id !== fruitId)
-        : current.fruitIds.length < 4
-          ? [...current.fruitIds, fruitId]
-          : current.fruitIds
-
-      return { ...current, fruitIds }
+      return {
+        ...current,
+        fruitSelections: togglePortionSelection(current.fruitSelections, fruitId),
+      }
     })
+  }
+
+  const incrementFruit = (fruitId: string) => {
+    if (!isAvailabilityReady || !isIngredientAvailable(availability, 'fruits', fruitId)) {
+      return
+    }
+
+    setOrder((current) => ({
+      ...current,
+      fruitSelections: incrementPortionSelection(current.fruitSelections, fruitId),
+    }))
+  }
+
+  const decrementFruit = (fruitId: string) => {
+    setOrder((current) => ({
+      ...current,
+      fruitSelections: decrementPortionSelection(current.fruitSelections, fruitId),
+    }))
   }
 
   const toggleTopping = (toppingId: string) => {
@@ -182,13 +203,29 @@ export function useOrderBuilder() {
     }
 
     setOrder((current) => {
-      const alreadySelected = current.toppingIds.includes(toppingId)
-      const toppingIds = alreadySelected
-        ? current.toppingIds.filter((id) => id !== toppingId)
-        : [...current.toppingIds, toppingId]
-
-      return { ...current, toppingIds }
+      return {
+        ...current,
+        toppingSelections: togglePortionSelection(current.toppingSelections, toppingId),
+      }
     })
+  }
+
+  const incrementTopping = (toppingId: string) => {
+    if (!isAvailabilityReady || !isIngredientAvailable(availability, 'toppings', toppingId)) {
+      return
+    }
+
+    setOrder((current) => ({
+      ...current,
+      toppingSelections: incrementPortionSelection(current.toppingSelections, toppingId),
+    }))
+  }
+
+  const decrementTopping = (toppingId: string) => {
+    setOrder((current) => ({
+      ...current,
+      toppingSelections: decrementPortionSelection(current.toppingSelections, toppingId),
+    }))
   }
 
   const setSyrup = (syrupId: string) => {
@@ -282,6 +319,7 @@ export function useOrderBuilder() {
     selectedToppings,
     selectedSyrup,
     total,
+    extraPortionsTotal,
     validation,
     confirmationData,
     isConfirmationModalOpen,
@@ -296,7 +334,11 @@ export function useOrderBuilder() {
     setOrderType,
     toggleIceCreamFlavor,
     toggleFruit,
+    incrementFruit,
+    decrementFruit,
     toggleTopping,
+    incrementTopping,
+    decrementTopping,
     setSyrup,
     setObservation,
     updateCustomerData,

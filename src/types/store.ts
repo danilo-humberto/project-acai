@@ -1,7 +1,6 @@
 export type StoreConfig = {
   name: string
   shortName: string
-  whatsappNumber: string
   address: {
     street: string
     city: string

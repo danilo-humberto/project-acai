@@ -4,9 +4,11 @@ import { cn } from '../../utils/cn'
 import { formatCurrency } from '../../utils/formatCurrency'
 import {
   canCancelOrder,
-  formatOrderList,
+  formatOrderPortions,
   formatOrderShortDateTime,
+  getOrderFruitPortions,
   getOrderIceCreamFlavors,
+  getOrderToppingPortions,
   getNextOrderActionLabel,
   getNextOrderStatus,
   orderStatusTheme,
@@ -25,15 +27,17 @@ export function OrderCard({ order, isUpdating, onOpenDetails, onStatusChange }: 
   const theme = orderStatusTheme[order.status]
   const isCompleted = order.status === 'completed'
   const itemSummary = `${order.items.size ?? 'Sem tamanho'} • ${order.items.productName ?? 'Produto não informado'}`
-  const detailsSummary = formatOrderList(
-    [
-      ...getOrderIceCreamFlavors(order.items),
-      ...(order.items.fruits ?? []),
-      ...(order.items.toppings ?? []),
-      order.items.syrup,
-    ].filter(Boolean) as string[],
-    'Sem complementos',
+  const portionSummary = formatOrderPortions(
+    [...getOrderFruitPortions(order.items), ...getOrderToppingPortions(order.items)],
+    '',
   )
+  const detailsSummary = [
+    ...getOrderIceCreamFlavors(order.items),
+    portionSummary,
+    order.items.syrup,
+  ]
+    .filter(Boolean)
+    .join(', ') || 'Sem complementos'
 
   return (
     <article className="rounded-2xl border border-[oklch(89%_0.015_326_/_84%)] bg-[oklch(99%_0.006_326_/_86%)] p-4 shadow-[0_12px_30px_oklch(14%_0.05_326_/_8%)]">

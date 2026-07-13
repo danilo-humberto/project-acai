@@ -12,8 +12,14 @@ const order: OrderDraft = {
   sizeId: 'm',
   orderTypeId: 'icecream',
   iceCreamFlavorIds: ['chocomenta', 'morango'],
-  fruitIds: ['banana', 'morango'],
-  toppingIds: ['granola', 'mms'],
+  fruitSelections: [
+    { id: 'banana', quantity: 3 },
+    { id: 'morango', quantity: 1 },
+  ],
+  toppingSelections: [
+    { id: 'granola', quantity: 1 },
+    { id: 'mms', quantity: 2 },
+  ],
   syrupId: 'chocolate',
   observation: '',
   customer: { name: 'Cliente', phone: '(99) 99999-9999' },
@@ -69,8 +75,8 @@ describe('ingredientAvailability', () => {
 
     expect(result.order).toMatchObject({
       iceCreamFlavorIds: ['morango'],
-      fruitIds: ['morango'],
-      toppingIds: ['granola'],
+      fruitSelections: [{ id: 'morango', quantity: 1 }],
+      toppingSelections: [{ id: 'granola', quantity: 1 }],
       syrupId: 'sem-calda',
     })
     expect(result.removedItems).toHaveLength(4)

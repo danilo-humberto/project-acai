@@ -19,7 +19,7 @@ export const orderSteps: OrderStep[] = [
   {
     id: "fruits",
     title: "Frutas",
-    description: "Ate 4 opcoes",
+    description: "Escolha à vontade",
   },
   {
     id: "toppings",

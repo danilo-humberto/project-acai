@@ -117,19 +117,23 @@ export function BuilderSection({ builder }: BuilderSectionProps) {
             )}
             <FruitSelector
               fruits={fruits}
-              selectedFruitIds={builder.order.fruitIds}
+              selections={builder.order.fruitSelections}
               unavailableFruitIds={builder.availability.fruitIds}
               isAvailabilityReady={builder.isAvailabilityReady}
               stepNumber={getStepNumber("fruits")}
               onToggle={builder.toggleFruit}
+              onIncrement={builder.incrementFruit}
+              onDecrement={builder.decrementFruit}
             />
             <ToppingSelector
               toppings={toppings}
-              selectedToppingIds={builder.order.toppingIds}
+              selections={builder.order.toppingSelections}
               unavailableToppingIds={builder.availability.toppingIds}
               isAvailabilityReady={builder.isAvailabilityReady}
               stepNumber={getStepNumber("toppings")}
               onToggle={builder.toggleTopping}
+              onIncrement={builder.incrementTopping}
+              onDecrement={builder.decrementTopping}
             />
             <SyrupSelector
               syrups={syrups}

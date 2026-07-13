@@ -1,14 +1,17 @@
 import { Cookie, Milk, Nut, Sparkles } from "lucide-react";
-import type { ToppingOption } from "../../types/order";
-import { CheckboxCard } from "../ui/CheckboxCard";
+import type { PortionSelection, ToppingOption } from "../../types/order";
+import { getSelectionQuantity } from "../../utils/portionSelections";
+import { PortionCard } from "../ui/PortionCard";
 
 type ToppingSelectorProps = {
   toppings: ToppingOption[];
-  selectedToppingIds: string[];
+  selections: PortionSelection[];
   unavailableToppingIds: string[];
   isAvailabilityReady: boolean;
   stepNumber: number;
   onToggle: (toppingId: string) => void;
+  onIncrement: (toppingId: string) => void;
+  onDecrement: (toppingId: string) => void;
 };
 
 const toppingIcons = {
@@ -25,11 +28,13 @@ const toppingIcons = {
 
 export function ToppingSelector({
   toppings,
-  selectedToppingIds,
+  selections,
   unavailableToppingIds,
   isAvailabilityReady,
   stepNumber,
   onToggle,
+  onIncrement,
+  onDecrement,
 }: ToppingSelectorProps) {
   return (
     <section id="builder-toppings" className="scroll-mt-28">
@@ -40,14 +45,17 @@ export function ToppingSelector({
         <h3 className="break-words font-display text-3xl font-extrabold leading-tight text-[var(--ink-900)]">
           Capriche nas guloseimas
         </h3>
+        <p className="mt-2 text-sm leading-6 text-[var(--ink-500)]">
+          A primeira porção de cada guloseima é incluída. Porções extras custam R$ 0,50 cada.
+        </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {toppings.map((topping) => (
-          <CheckboxCard
+          <PortionCard
             key={topping.id}
             title={topping.name}
             description={topping.description}
-            selected={selectedToppingIds.includes(topping.id)}
+            quantity={getSelectionQuantity(selections, topping.id)}
             disabled={
               !isAvailabilityReady || unavailableToppingIds.includes(topping.id)
             }
@@ -57,7 +65,9 @@ export function ToppingSelector({
                 : undefined
             }
             icon={toppingIcons[topping.id as keyof typeof toppingIcons]}
-            onClick={() => onToggle(topping.id)}
+            onToggle={() => onToggle(topping.id)}
+            onIncrement={() => onIncrement(topping.id)}
+            onDecrement={() => onDecrement(topping.id)}
           />
         ))}
       </div>

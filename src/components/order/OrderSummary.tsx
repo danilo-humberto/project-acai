@@ -14,6 +14,7 @@ import { useEffect, useRef } from "react";
 import { paymentMethods } from "../../data/paymentMethods";
 import type { OrderBuilder } from "../../hooks/useOrderBuilder";
 import { formatCurrency } from "../../utils/formatCurrency";
+import { formatOrderPortions } from "../../utils/orderDisplay";
 import { FinalizeOrderButton } from "./FinalizeOrderButton";
 
 type OrderSummaryProps = {
@@ -31,6 +32,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
     selectedToppings,
     selectedSyrup,
     total,
+    extraPortionsTotal,
     validation,
     isFinalizing,
     finalizeError,
@@ -64,6 +66,8 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
     order.payment.needsChange,
     selectedFruits.length,
     selectedToppings.length,
+    order.fruitSelections,
+    order.toppingSelections,
     selectedSyrup.id,
   ]);
 
@@ -83,7 +87,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
         <SummaryLine
           label="Tamanho"
           value={selectedSize?.name ?? "Não selecionado"}
-          price={selectedSize ? total : undefined}
+          price={selectedSize?.price}
           icon={<ClipboardList size={18} />}
         />
         <SummaryLine
@@ -107,17 +111,12 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
         )}
         <SummaryLine
           label="Frutas"
-          value={
-            selectedFruits.map((fruit) => fruit.name).join(", ") || "Sem frutas"
-          }
+          value={formatOrderPortions(selectedFruits, "Sem frutas")}
           icon={<Heart size={18} />}
         />
         <SummaryLine
           label="Guloseimas"
-          value={
-            selectedToppings.map((topping) => topping.name).join(", ") ||
-            "Sem guloseimas"
-          }
+          value={formatOrderPortions(selectedToppings, "Sem guloseimas")}
           icon={<ShoppingBasket size={18} />}
         />
         <SummaryLine
@@ -125,6 +124,14 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
           value={selectedSyrup.name}
           icon={<Heart size={18} />}
         />
+        {extraPortionsTotal > 0 && (
+          <SummaryLine
+            label="Porções adicionais"
+            value="R$ 0,50 por porção extra"
+            price={extraPortionsTotal}
+            icon={<ShoppingBasket size={18} />}
+          />
+        )}
         <SummaryLine
           label="Nome"
           value={order.customer.name.trim() || "Não informado"}

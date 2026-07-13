@@ -1,14 +1,17 @@
 import { Apple, Banana, Cherry, Grape } from 'lucide-react'
-import type { FruitOption } from '../../types/order'
-import { CheckboxCard } from '../ui/CheckboxCard'
+import type { FruitOption, PortionSelection } from '../../types/order'
+import { getSelectionQuantity } from '../../utils/portionSelections'
+import { PortionCard } from '../ui/PortionCard'
 
 type FruitSelectorProps = {
   fruits: FruitOption[]
-  selectedFruitIds: string[]
+  selections: PortionSelection[]
   unavailableFruitIds: string[]
   isAvailabilityReady: boolean
   stepNumber: number
   onToggle: (fruitId: string) => void
+  onIncrement: (fruitId: string) => void
+  onDecrement: (fruitId: string) => void
 }
 
 const fruitIcons = {
@@ -20,29 +23,36 @@ const fruitIcons = {
 
 export function FruitSelector({
   fruits,
-  selectedFruitIds,
+  selections,
   unavailableFruitIds,
   isAvailabilityReady,
   stepNumber,
   onToggle,
+  onIncrement,
+  onDecrement,
 }: FruitSelectorProps) {
   return (
     <section id="builder-fruits" className="scroll-mt-28">
       <div className="mb-5">
         <p className="text-sm font-extrabold text-[var(--leaf-700)]">{stepNumber}. Frutas</p>
-        <h3 className="break-words font-display text-3xl font-extrabold leading-tight text-[var(--ink-900)]">Escolha até 4 opções</h3>
+        <h3 className="break-words font-display text-3xl font-extrabold leading-tight text-[var(--ink-900)]">Escolha à vontade</h3>
+        <p className="mt-2 text-sm leading-6 text-[var(--ink-500)]">
+          A primeira porção de cada fruta é incluída. Porções extras custam R$ 0,50 cada.
+        </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {fruits.map((fruit) => (
-          <CheckboxCard
+          <PortionCard
             key={fruit.id}
             title={fruit.name}
             description={fruit.description}
-            selected={selectedFruitIds.includes(fruit.id)}
+            quantity={getSelectionQuantity(selections, fruit.id)}
             disabled={!isAvailabilityReady || unavailableFruitIds.includes(fruit.id)}
             statusLabel={unavailableFruitIds.includes(fruit.id) ? 'Esgotado' : undefined}
             icon={fruitIcons[fruit.id as keyof typeof fruitIcons]}
-            onClick={() => onToggle(fruit.id)}
+            onToggle={() => onToggle(fruit.id)}
+            onIncrement={() => onIncrement(fruit.id)}
+            onDecrement={() => onDecrement(fruit.id)}
           />
         ))}
       </div>

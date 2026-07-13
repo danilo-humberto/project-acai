@@ -31,6 +31,17 @@ export type ToppingOption = PricedOption
 
 export type SyrupOption = PricedOption
 
+export type PortionSelection = {
+  id: string
+  quantity: number
+}
+
+export type PortionOrderItem = PortionSelection & {
+  name: string
+  extraUnitPriceCents: number
+  extraSubtotalCents: number
+}
+
 export type PaymentMethod = 'pix' | 'card' | 'cash'
 
 export type PaymentMethodId = PaymentMethod
@@ -56,8 +67,8 @@ export type OrderDraft = {
   sizeId: string
   orderTypeId: OrderTypeId | ''
   iceCreamFlavorIds: string[]
-  fruitIds: string[]
-  toppingIds: string[]
+  fruitSelections: PortionSelection[]
+  toppingSelections: PortionSelection[]
   syrupId: string
   observation: string
   customer: CustomerData
@@ -86,8 +97,10 @@ export type Order = {
     iceCreamFlavor?: string
     fruitIds?: string[]
     fruits?: string[]
+    fruitPortions?: PortionOrderItem[]
     toppingIds?: string[]
     toppings?: string[]
+    toppingPortions?: PortionOrderItem[]
     syrupId?: string
     syrup?: string
     observation?: string

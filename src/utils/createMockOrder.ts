@@ -8,6 +8,7 @@ import { toppings } from '../data/toppings'
 import type { Order, OrderConfirmationData, OrderDraft } from '../types/order'
 import { calculateOrderTotal } from './calculateOrderTotal'
 import { parseBRLCurrencyInput } from './formatCurrency'
+import { buildPortionOrderItems, getPortionSelectionIds } from './portionSelections'
 
 export type MockOrderResult = OrderConfirmationData & {
   order: Order
@@ -30,8 +31,8 @@ export function createMockOrder(orderDraft: OrderDraft): MockOrderResult {
   const selectedOrderType = orderTypes.find((orderType) => orderType.id === orderDraft.orderTypeId)
   const selectedSize = sizes.find((size) => size.id === orderDraft.sizeId)
   const selectedIceCreamFlavors = getIceCreamFlavorsByIds(orderDraft.iceCreamFlavorIds)
-  const selectedFruits = fruits.filter((fruit) => orderDraft.fruitIds.includes(fruit.id))
-  const selectedToppings = toppings.filter((topping) => orderDraft.toppingIds.includes(topping.id))
+  const selectedFruits = buildPortionOrderItems(fruits, orderDraft.fruitSelections)
+  const selectedToppings = buildPortionOrderItems(toppings, orderDraft.toppingSelections)
   const selectedSyrup = syrups.find((syrup) => syrup.id === orderDraft.syrupId)
   const selectedPayment = paymentMethods.find((payment) => payment.id === orderDraft.payment.method)
   const now = new Date().toISOString()
@@ -56,10 +57,12 @@ export function createMockOrder(orderDraft: OrderDraft): MockOrderResult {
         iceCreamFlavors: selectedIceCreamFlavors.map((flavor) => flavor.name),
         iceCreamFlavorId: orderDraft.iceCreamFlavorIds[0] ?? '',
         iceCreamFlavor: selectedIceCreamFlavors[0]?.name,
-        fruitIds: orderDraft.fruitIds,
+        fruitIds: getPortionSelectionIds(orderDraft.fruitSelections),
         fruits: selectedFruits.map((fruit) => fruit.name),
-        toppingIds: orderDraft.toppingIds,
+        fruitPortions: selectedFruits,
+        toppingIds: getPortionSelectionIds(orderDraft.toppingSelections),
         toppings: selectedToppings.map((topping) => topping.name),
+        toppingPortions: selectedToppings,
         syrupId: orderDraft.syrupId,
         syrup: selectedSyrup?.name,
         observation: orderDraft.observation.trim() || undefined,

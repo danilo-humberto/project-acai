@@ -6,8 +6,8 @@ const validOrder: OrderDraft = {
   sizeId: 'm',
   orderTypeId: 'icecream',
   iceCreamFlavorIds: ['morango'],
-  fruitIds: [],
-  toppingIds: [],
+  fruitSelections: [],
+  toppingSelections: [],
   syrupId: 'sem-calda',
   observation: '',
   customer: {

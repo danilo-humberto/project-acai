@@ -15,7 +15,8 @@ No painel administrativo, a loja consegue visualizar os pedidos em tempo real, a
 - Escolha de tamanho: P, M, G, Barca P ou Barca M.
 - Escolha do tipo de pedido: so acai, acai com creme ou so creme.
 - Seleção de um sabor para açaí com creme ou até dois sabores para pedidos só de creme.
-- Seleção de frutas, adicionais e calda.
+- Seleção livre de frutas e guloseimas, com controle de quantidade por item.
+- Primeira porção de cada fruta ou guloseima incluída e porções extras por R$ 0,50.
 - Opcao de sem calda.
 - Dados do cliente com mascara de telefone.
 - Forma de pagamento com suporte a Pix, cartao e dinheiro.
@@ -25,7 +26,7 @@ No painel administrativo, a loja consegue visualizar os pedidos em tempo real, a
 - Pagina publica de acompanhamento do pedido.
 - Painel admin com login via Firebase Authentication.
 - Kanban de pedidos com atualizacao em tempo real.
-- Controle em tempo real da disponibilidade de cremes, frutas, adicionais e caldas.
+- Controle em tempo real da disponibilidade de cremes, frutas, guloseimas e caldas.
 - Separacao de pedidos cancelados em uma tela propria.
 - Pagina 404 personalizada.
 
@@ -197,7 +198,7 @@ cancelled
 1. Cliente escolhe o tamanho.
 2. Cliente escolhe o tipo do pedido.
 3. Se necessário, escolhe um ou até dois sabores de creme, conforme o tipo do pedido.
-4. Cliente escolhe frutas, adicionais e calda.
+4. Cliente escolhe frutas, guloseimas, quantidades e calda.
 5. Cliente informa nome e telefone.
 6. Cliente escolhe a forma de pagamento.
 7. Pedido e validado e salvo no Firestore.
