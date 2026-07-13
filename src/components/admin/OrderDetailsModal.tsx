@@ -103,7 +103,9 @@ export function OrderDetailsModal({
               />
               {selectedIceCreamFlavors.length > 0 && (
                 <DetailLine
-                  label={selectedIceCreamFlavors.length > 1 ? "Sabores" : "Sabor"}
+                  label={
+                    selectedIceCreamFlavors.length > 1 ? "Sabores" : "Sabor"
+                  }
                   value={selectedIceCreamFlavors.join(", ")}
                 />
               )}
@@ -112,7 +114,7 @@ export function OrderDetailsModal({
                 value={formatOrderList(order.items.fruits)}
               />
               <DetailLine
-                label="Adicionais"
+                label="Guloseimas"
                 value={formatOrderList(order.items.toppings)}
               />
               <DetailLine

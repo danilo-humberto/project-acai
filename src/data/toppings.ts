@@ -44,9 +44,15 @@ export const toppings: ToppingOption[] = [
     price: 0,
   },
   {
-    id: 'pacoca-ou-canudo',
-    name: 'Paçoca ou Canudo',
-    description: 'Escolha para finalizar',
+    id: 'pacoca',
+    name: 'Paçoca',
+    description: 'Doce de amendoim esfarelado',
+    price: 0,
+  },
+  {
+    id: 'canudo',
+    name: 'Canudo',
+    description: 'Canudo crocante para finalizar',
     price: 0,
   },
 ]

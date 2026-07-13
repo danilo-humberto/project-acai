@@ -1,14 +1,24 @@
-import gsap from 'gsap'
-import { ClipboardList, CreditCard, Heart, LockKeyhole, MapPin, Phone, ShoppingBasket, Snowflake, User } from 'lucide-react'
-import { useEffect, useRef } from 'react'
-import { paymentMethods } from '../../data/paymentMethods'
-import type { OrderBuilder } from '../../hooks/useOrderBuilder'
-import { formatCurrency } from '../../utils/formatCurrency'
-import { FinalizeOrderButton } from './FinalizeOrderButton'
+import gsap from "gsap";
+import {
+  ClipboardList,
+  CreditCard,
+  Heart,
+  LockKeyhole,
+  MapPin,
+  Phone,
+  ShoppingBasket,
+  Snowflake,
+  User,
+} from "lucide-react";
+import { useEffect, useRef } from "react";
+import { paymentMethods } from "../../data/paymentMethods";
+import type { OrderBuilder } from "../../hooks/useOrderBuilder";
+import { formatCurrency } from "../../utils/formatCurrency";
+import { FinalizeOrderButton } from "./FinalizeOrderButton";
 
 type OrderSummaryProps = {
-  builder: OrderBuilder
-}
+  builder: OrderBuilder;
+};
 
 export function OrderSummary({ builder }: OrderSummaryProps) {
   const {
@@ -25,22 +35,26 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
     isFinalizing,
     finalizeError,
     finalizeOrder,
-  } = builder
-  const selectedPayment = paymentMethods.find((payment) => payment.id === order.payment.method)
-  const summaryBodyRef = useRef<HTMLDivElement>(null)
+  } = builder;
+  const selectedPayment = paymentMethods.find(
+    (payment) => payment.id === order.payment.method,
+  );
+  const summaryBodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     if (prefersReducedMotion || !summaryBodyRef.current) {
-      return
+      return;
     }
 
     gsap.fromTo(
       summaryBodyRef.current,
       { y: 4 },
-      { y: 0, duration: 0.24, ease: 'power3.out' },
-    )
+      { y: 0, duration: 0.24, ease: "power3.out" },
+    );
   }, [
     total,
     order.sizeId,
@@ -51,7 +65,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
     selectedFruits.length,
     selectedToppings.length,
     selectedSyrup.id,
-  ])
+  ]);
 
   return (
     <aside
@@ -68,46 +82,62 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
       <div ref={summaryBodyRef} className="space-y-4 p-4 sm:p-5">
         <SummaryLine
           label="Tamanho"
-          value={selectedSize?.name ?? 'Não selecionado'}
+          value={selectedSize?.name ?? "Não selecionado"}
           price={selectedSize ? total : undefined}
           icon={<ClipboardList size={18} />}
         />
         <SummaryLine
           label="Tipo do pedido"
-          value={selectedOrderType?.name ?? 'Não selecionado'}
+          value={selectedOrderType?.name ?? "Não selecionado"}
           icon={<ShoppingBasket size={18} />}
         />
         {shouldChooseIceCreamFlavor && (
           <SummaryLine
-            label={selectedIceCreamFlavors.length > 1 ? 'Sabores do creme' : 'Sabor do creme'}
-            value={selectedIceCreamFlavors.map((flavor) => flavor.name).join(', ') || 'Não selecionado'}
+            label={
+              selectedIceCreamFlavors.length > 1
+                ? "Sabores do creme"
+                : "Sabor do creme"
+            }
+            value={
+              selectedIceCreamFlavors.map((flavor) => flavor.name).join(", ") ||
+              "Não selecionado"
+            }
             icon={<Snowflake size={18} />}
           />
         )}
         <SummaryLine
           label="Frutas"
-          value={selectedFruits.map((fruit) => fruit.name).join(', ') || 'Sem frutas'}
+          value={
+            selectedFruits.map((fruit) => fruit.name).join(", ") || "Sem frutas"
+          }
           icon={<Heart size={18} />}
         />
         <SummaryLine
-          label="Adicionais"
-          value={selectedToppings.map((topping) => topping.name).join(', ') || 'Sem adicionais'}
+          label="Guloseimas"
+          value={
+            selectedToppings.map((topping) => topping.name).join(", ") ||
+            "Sem guloseimas"
+          }
           icon={<ShoppingBasket size={18} />}
         />
-        <SummaryLine label="Calda" value={selectedSyrup.name} icon={<Heart size={18} />} />
+        <SummaryLine
+          label="Calda"
+          value={selectedSyrup.name}
+          icon={<Heart size={18} />}
+        />
         <SummaryLine
           label="Nome"
-          value={order.customer.name.trim() || 'Não informado'}
+          value={order.customer.name.trim() || "Não informado"}
           icon={<User size={18} />}
         />
         <SummaryLine
           label="Telefone"
-          value={order.customer.phone.trim() || 'Não informado'}
+          value={order.customer.phone.trim() || "Não informado"}
           icon={<Phone size={18} />}
         />
         <SummaryLine
           label="Pagamento"
-          value={selectedPayment?.name ?? 'Não selecionado'}
+          value={selectedPayment?.name ?? "Não selecionado"}
           icon={<CreditCard size={18} />}
         />
         <SummaryLine
@@ -115,10 +145,14 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
           value="Retirada no local"
           icon={<MapPin size={18} />}
         />
-        {order.payment.method === 'cash' && (
+        {order.payment.method === "cash" && (
           <SummaryLine
             label="Troco"
-            value={order.payment.needsChange ? order.payment.changeFor || 'Valor não informado' : 'Não precisa'}
+            value={
+              order.payment.needsChange
+                ? order.payment.changeFor || "Valor não informado"
+                : "Não precisa"
+            }
             icon={<CreditCard size={18} />}
           />
         )}
@@ -126,7 +160,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
         <div className="rounded-2xl bg-[var(--cream-100)] p-4">
           <p className="text-sm font-extrabold">Observação</p>
           <p className="mt-1 text-sm leading-5 text-[var(--ink-700)]">
-            {order.observation.trim() || 'Sem observação.'}
+            {order.observation.trim() || "Sem observação."}
           </p>
         </div>
 
@@ -136,14 +170,20 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
           </div>
         ) : (
           <div className="rounded-2xl bg-[var(--cream-100)] p-4">
-            <p className="text-sm font-extrabold text-[var(--berry-600)]">Faltam dados obrigatórios</p>
-            <p className="mt-1 text-sm leading-5 text-[var(--ink-700)]">{validation.errors[0]}</p>
+            <p className="text-sm font-extrabold text-[var(--berry-600)]">
+              Faltam dados obrigatórios
+            </p>
+            <p className="mt-1 text-sm leading-5 text-[var(--ink-700)]">
+              {validation.errors[0]}
+            </p>
           </div>
         )}
 
         <div className="summary-total flex items-center justify-between border-t border-[var(--cream-200)] pt-4">
           <span className="font-extrabold">Total estimado</span>
-          <strong className="font-display text-3xl text-[var(--leaf-700)]">{formatCurrency(total)}</strong>
+          <strong className="font-display text-3xl text-[var(--leaf-700)]">
+            {formatCurrency(total)}
+          </strong>
         </div>
 
         <FinalizeOrderButton
@@ -155,19 +195,21 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
 
         <div className="flex items-start gap-2 text-xs leading-5 text-[var(--ink-500)]">
           <LockKeyhole className="mt-0.5 shrink-0" size={14} />
-          <span>Após finalizar, você receberá um código para acompanhar seu pedido.</span>
+          <span>
+            Após finalizar, você receberá um código para acompanhar seu pedido.
+          </span>
         </div>
       </div>
     </aside>
-  )
+  );
 }
 
 type SummaryLineProps = {
-  label: string
-  value: string
-  price?: number
-  icon: React.ReactNode
-}
+  label: string;
+  value: string;
+  price?: number;
+  icon: React.ReactNode;
+};
 
 function SummaryLine({ label, value, price, icon }: SummaryLineProps) {
   return (
@@ -175,9 +217,15 @@ function SummaryLine({ label, value, price, icon }: SummaryLineProps) {
       <span className="mt-1 text-[var(--plum-800)]">{icon}</span>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-extrabold">{label}</p>
-        <p className="break-words text-sm leading-5 text-[var(--ink-500)]">{value}</p>
+        <p className="break-words text-sm leading-5 text-[var(--ink-500)]">
+          {value}
+        </p>
       </div>
-      {price !== undefined && <span className="text-sm font-bold text-[var(--ink-700)]">{formatCurrency(price)}</span>}
+      {price !== undefined && (
+        <span className="text-sm font-bold text-[var(--ink-700)]">
+          {formatCurrency(price)}
+        </span>
+      )}
     </div>
-  )
+  );
 }
