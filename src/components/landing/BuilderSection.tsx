@@ -86,6 +86,7 @@ export function BuilderSection({ builder }: BuilderSectionProps) {
             <OrderTypeSelector
               orderTypes={orderTypes}
               selectedOrderTypeId={builder.order.orderTypeId}
+              isBarcaSelected={builder.order.sizeId.startsWith("barca-")}
               fieldErrors={builder.validation.fieldErrors}
               stepNumber={getStepNumber("order-type")}
               onSelect={builder.setOrderType}

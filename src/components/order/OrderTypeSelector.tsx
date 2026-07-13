@@ -4,6 +4,7 @@ import { OptionCard } from '../ui/OptionCard'
 type OrderTypeSelectorProps = {
   orderTypes: OrderTypeOption[]
   selectedOrderTypeId: OrderTypeId | ''
+  isBarcaSelected: boolean
   fieldErrors: OrderValidation['fieldErrors']
   stepNumber: number
   onSelect: (orderTypeId: OrderTypeId) => void
@@ -12,6 +13,7 @@ type OrderTypeSelectorProps = {
 export function OrderTypeSelector({
   orderTypes,
   selectedOrderTypeId,
+  isBarcaSelected,
   fieldErrors,
   stepNumber,
   onSelect,
@@ -23,7 +25,7 @@ export function OrderTypeSelector({
           {stepNumber}. Tipo do pedido
         </p>
         <h3 className="break-words font-display text-3xl font-extrabold leading-tight text-[var(--ink-900)]">
-          O que vai no pote?
+          O que vai {isBarcaSelected ? 'na barca' : 'no pote'}?
         </h3>
       </div>
       <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-3">
