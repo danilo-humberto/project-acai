@@ -11,7 +11,10 @@ import {
   User,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { paymentMethods } from "../../data/paymentMethods";
+import {
+  paymentMethods,
+  SHOW_CASH_CHANGE_DETAILS,
+} from "../../data/paymentMethods";
 import type { OrderBuilder } from "../../hooks/useOrderBuilder";
 import { formatCurrency } from "../../utils/formatCurrency";
 import { formatOrderPortions } from "../../utils/orderDisplay";
@@ -157,7 +160,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
           value="Retirada no local"
           icon={<MapPin size={18} />}
         />
-        {order.payment.method === "cash" && (
+        {SHOW_CASH_CHANGE_DETAILS && order.payment.method === "cash" && (
           <SummaryLine
             label="Troco"
             value={

@@ -1,5 +1,5 @@
 import { Banknote, CreditCard, QrCode } from 'lucide-react'
-import { paymentMethods } from '../../data/paymentMethods'
+import { paymentMethods, SHOW_CASH_CHANGE_DETAILS } from '../../data/paymentMethods'
 import type { OrderValidation, PaymentData, PaymentMethod } from '../../types/order'
 import { formatBRLCurrencyInput, MONEY_INPUT_MAX_LENGTH } from '../../utils/formatCurrency'
 import { Input } from '../ui/Input'
@@ -44,7 +44,7 @@ export function PaymentForm({ payment, fieldErrors, stepNumber, onMethodChange, 
         <p className="mt-3 text-sm font-bold text-[var(--berry-600)]">{fieldErrors['payment.method']}</p>
       )}
 
-      {isCash && (
+      {SHOW_CASH_CHANGE_DETAILS && isCash && (
         <div className="mt-5 grid gap-4 rounded-3xl bg-[var(--cream-100)] p-4 sm:grid-cols-2">
           <RadioCard
             title="Não preciso de troco"

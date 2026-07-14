@@ -1,4 +1,5 @@
 import { getIceCreamFlavorLimit, orderTypeNeedsIceCreamFlavor } from '../data/orderTypes'
+import { SHOW_CASH_CHANGE_DETAILS } from '../data/paymentMethods'
 import type { OrderDraft, OrderValidation, OrderValidationField } from '../types/order'
 import { getPhoneDigits, isCompletePhoneNumber } from './phone'
 import { getDisallowedToppingIdsForSize } from './toppingCompatibility'
@@ -67,7 +68,12 @@ export function validateOrder(order: OrderDraft): OrderValidation {
     addError(validation, 'payment.method', 'Escolha a forma de pagamento.')
   }
 
-  if (order.payment.method === 'cash' && order.payment.needsChange && !order.payment.changeFor.trim()) {
+  if (
+    SHOW_CASH_CHANGE_DETAILS &&
+    order.payment.method === 'cash' &&
+    order.payment.needsChange &&
+    !order.payment.changeFor.trim()
+  ) {
     addError(validation, 'payment.changeFor', 'Informe para quanto precisa de troco.')
   }
 

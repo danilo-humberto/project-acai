@@ -1,5 +1,7 @@
 import type { PaymentMethodOption } from "../types/order";
 
+export const SHOW_CASH_CHANGE_DETAILS = false;
+
 export const paymentMethods: PaymentMethodOption[] = [
   {
     id: "pix",
@@ -14,6 +16,6 @@ export const paymentMethods: PaymentMethodOption[] = [
   {
     id: "cash",
     name: "Dinheiro na retirada",
-    description: "Com opção de troco",
+    description: "Pagamento no balcão",
   },
 ];

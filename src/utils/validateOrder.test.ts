@@ -93,3 +93,19 @@ describe('validateOrder topping compatibility', () => {
     expect(validation.isValid).toBe(true)
   })
 })
+
+describe('validateOrder cash payment', () => {
+  it('aceita dinheiro sem exigir informações de troco', () => {
+    const validation = validateOrder({
+      ...validOrder,
+      payment: {
+        method: 'cash',
+        needsChange: true,
+        changeFor: '',
+      },
+    })
+
+    expect(validation.fieldErrors['payment.changeFor']).toBeUndefined()
+    expect(validation.isValid).toBe(true)
+  })
+})

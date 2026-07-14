@@ -2,7 +2,7 @@ import { collection, doc, onSnapshot, orderBy, query, runTransaction, serverTime
 import { fruits } from '../data/fruits'
 import { getIceCreamFlavorsByIds } from '../data/iceCreamFlavors'
 import { orderTypes } from '../data/orderTypes'
-import { paymentMethods } from '../data/paymentMethods'
+import { paymentMethods, SHOW_CASH_CHANGE_DETAILS } from '../data/paymentMethods'
 import { sizes } from '../data/sizes'
 import { syrups } from '../data/syrups'
 import { toppings } from '../data/toppings'
@@ -80,9 +80,14 @@ function buildOrderDocument(orderDraft: OrderDraft, publicCode: string, tracking
     },
     payment: {
       method: selectedPayment?.id,
-      needsChange: orderDraft.payment.method === 'cash' ? orderDraft.payment.needsChange : false,
+      needsChange:
+        SHOW_CASH_CHANGE_DETAILS && orderDraft.payment.method === 'cash'
+          ? orderDraft.payment.needsChange
+          : false,
       changeFor:
-        orderDraft.payment.method === 'cash' && orderDraft.payment.needsChange
+        SHOW_CASH_CHANGE_DETAILS &&
+        orderDraft.payment.method === 'cash' &&
+        orderDraft.payment.needsChange
           ? parseBRLCurrencyInput(orderDraft.payment.changeFor)
           : undefined,
     },

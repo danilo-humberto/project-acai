@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { fruits } from '../data/fruits'
 import { getIceCreamFlavorsByIds } from '../data/iceCreamFlavors'
 import { getIceCreamFlavorLimit, orderTypeNeedsIceCreamFlavor, orderTypes } from '../data/orderTypes'
+import { SHOW_CASH_CHANGE_DETAILS } from '../data/paymentMethods'
 import { sizes } from '../data/sizes'
 import { syrups } from '../data/syrups'
 import { toppings } from '../data/toppings'
@@ -319,8 +320,14 @@ export function useOrderBuilder() {
       payment: {
         ...current.payment,
         method,
-        needsChange: method === 'cash' ? current.payment.needsChange : false,
-        changeFor: method === 'cash' ? current.payment.changeFor : '',
+        needsChange:
+          SHOW_CASH_CHANGE_DETAILS && method === 'cash'
+            ? current.payment.needsChange
+            : false,
+        changeFor:
+          SHOW_CASH_CHANGE_DETAILS && method === 'cash'
+            ? current.payment.changeFor
+            : '',
       },
     }))
   }

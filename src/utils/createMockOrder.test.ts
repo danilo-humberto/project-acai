@@ -32,3 +32,22 @@ describe('createMockOrder syrup portions', () => {
     expect(result.order.total).toBe(11)
   })
 })
+
+describe('createMockOrder cash payment', () => {
+  it('ignora dados de troco enquanto a opção estiver oculta', () => {
+    const result = createMockOrder({
+      ...orderDraft,
+      payment: {
+        method: 'cash',
+        needsChange: true,
+        changeFor: 'R$ 50,00',
+      },
+    })
+
+    expect(result.order.payment).toEqual({
+      method: 'cash',
+      needsChange: false,
+      changeFor: undefined,
+    })
+  })
+})
