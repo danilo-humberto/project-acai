@@ -8,7 +8,7 @@ const baseOrder: OrderDraft = {
   iceCreamFlavorIds: [],
   fruitSelections: [],
   toppingSelections: [],
-  syrupId: 'sem-calda',
+  syrupSelection: null,
   observation: '',
   customer: {
     name: '',
@@ -43,7 +43,17 @@ describe('calculateOrderTotal', () => {
     expect(calculateOrderTotal(baseOrder)).toBe(0)
   })
 
-  it('cobra somente as porções adicionais de frutas e guloseimas', () => {
+  it('mantém a primeira porção da calda incluída no tamanho', () => {
+    expect(
+      calculateOrderTotal({
+        ...baseOrder,
+        sizeId: 'm',
+        syrupSelection: { id: 'chocolate', quantity: 1 },
+      }),
+    ).toBe(10)
+  })
+
+  it('cobra somente as porções adicionais de frutas, guloseimas e calda', () => {
     expect(
       calculateOrderTotal({
         ...baseOrder,
@@ -53,8 +63,9 @@ describe('calculateOrderTotal', () => {
           { id: 'morango', quantity: 3 },
         ],
         toppingSelections: [{ id: 'pacoca', quantity: 2 }],
+        syrupSelection: { id: 'chocolate', quantity: 3 },
       }),
-    ).toBe(11.5)
+    ).toBe(12.5)
   })
 
   it('permite quantidades altas sem aplicar limite de porções', () => {

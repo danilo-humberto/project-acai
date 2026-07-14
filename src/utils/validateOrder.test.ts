@@ -8,7 +8,7 @@ const validOrder: OrderDraft = {
   iceCreamFlavorIds: ['morango'],
   fruitSelections: [],
   toppingSelections: [],
-  syrupId: 'sem-calda',
+  syrupSelection: null,
   observation: '',
   customer: {
     name: 'Cliente',

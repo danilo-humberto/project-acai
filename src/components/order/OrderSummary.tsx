@@ -68,6 +68,7 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
     selectedToppings.length,
     order.fruitSelections,
     order.toppingSelections,
+    order.syrupSelection,
     selectedSyrup.id,
   ]);
 
@@ -121,7 +122,11 @@ export function OrderSummary({ builder }: OrderSummaryProps) {
         />
         <SummaryLine
           label="Calda"
-          value={selectedSyrup.name}
+          value={
+            selectedSyrup.quantity > 0
+              ? formatOrderPortions([selectedSyrup])
+              : selectedSyrup.name
+          }
           icon={<Heart size={18} />}
         />
         {extraPortionsTotal > 0 && (

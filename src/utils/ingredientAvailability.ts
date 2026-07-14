@@ -97,7 +97,7 @@ export function getUnavailableOrderIngredients(
     creamFlavors: order.iceCreamFlavorIds,
     fruits: getPortionSelectionIds(order.fruitSelections),
     toppings: getPortionSelectionIds(order.toppingSelections),
-    syrups: order.syrupId ? [order.syrupId] : [],
+    syrups: order.syrupSelection ? [order.syrupSelection.id] : [],
   }
 
   return availabilityCategories.flatMap((category) => {
@@ -137,7 +137,10 @@ export function removeUnavailableIngredients(
       toppingSelections: order.toppingSelections.filter(
         (selection) => !unavailableIds.has(`toppings:${selection.id}`),
       ),
-      syrupId: unavailableIds.has(`syrups:${order.syrupId}`) ? 'sem-calda' : order.syrupId,
+      syrupSelection:
+        order.syrupSelection && unavailableIds.has(`syrups:${order.syrupSelection.id}`)
+          ? null
+          : order.syrupSelection,
     },
     removedItems: unavailableItems,
   }

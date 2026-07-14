@@ -16,6 +16,7 @@ import type { Order, OrderStatus } from '../types/order'
 import { formatCurrency } from '../utils/formatCurrency'
 import {
   formatOrderPortions,
+  formatOrderSyrup,
   getOrderFruitPortions,
   getOrderIceCreamFlavors,
   getOrderToppingPortions,
@@ -220,7 +221,7 @@ export function TrackingPage() {
                         label="Guloseimas"
                         value={formatOrderPortions(getOrderToppingPortions(order.items))}
                       />
-                      <InfoLine label="Calda" value={order.items.syrup ?? 'Sem calda'} />
+                      <InfoLine label="Calda" value={formatOrderSyrup(order.items)} />
                       <InfoLine label="Observação" value={order.items.observation ?? 'Sem observação'} />
                     </div>
                   </div>

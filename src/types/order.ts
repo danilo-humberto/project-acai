@@ -69,7 +69,7 @@ export type OrderDraft = {
   iceCreamFlavorIds: string[]
   fruitSelections: PortionSelection[]
   toppingSelections: PortionSelection[]
-  syrupId: string
+  syrupSelection: PortionSelection | null
   observation: string
   customer: CustomerData
   payment: PaymentData
@@ -103,6 +103,7 @@ export type Order = {
     toppingPortions?: PortionOrderItem[]
     syrupId?: string
     syrup?: string
+    syrupPortion?: PortionOrderItem
     observation?: string
   }
   payment: {

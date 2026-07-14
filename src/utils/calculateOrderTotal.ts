@@ -5,7 +5,8 @@ import { getExtraPortionsTotalCents } from './portionSelections'
 export function calculateExtraPortionsTotal(order: OrderDraft) {
   const extraTotalCents =
     getExtraPortionsTotalCents(order.fruitSelections) +
-    getExtraPortionsTotalCents(order.toppingSelections)
+    getExtraPortionsTotalCents(order.toppingSelections) +
+    getExtraPortionsTotalCents(order.syrupSelection ? [order.syrupSelection] : [])
 
   return extraTotalCents / 100
 }

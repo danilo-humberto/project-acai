@@ -5,6 +5,7 @@ import {
   canCancelOrder,
   formatOrderDate,
   formatOrderPortions,
+  formatOrderSyrup,
   getOrderFruitPortions,
   getOrderIceCreamFlavors,
   getOrderToppingPortions,
@@ -121,7 +122,7 @@ export function OrderDetailsModal({
               />
               <DetailLine
                 label="Calda"
-                value={order.items.syrup ?? "Sem calda"}
+                value={formatOrderSyrup(order.items)}
               />
               <DetailLine
                 label="Observação"

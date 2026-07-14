@@ -16,7 +16,7 @@ No painel administrativo, a loja consegue visualizar os pedidos em tempo real, a
 - Escolha do tipo de pedido: so acai, acai com creme ou so creme.
 - Seleção de um sabor para açaí com creme ou até dois sabores para pedidos só de creme.
 - Seleção livre de frutas e guloseimas, com controle de quantidade por item.
-- Primeira porção de cada fruta ou guloseima incluída e porções extras por R$ 0,50.
+- Primeira porção de cada fruta, guloseima ou calda incluída e porções extras por R$ 0,50.
 - Paçoca e Canudo indisponíveis para pedidos no pote P.
 - Opcao de sem calda.
 - Dados do cliente com mascara de telefone.
@@ -199,7 +199,7 @@ cancelled
 1. Cliente escolhe o tamanho.
 2. Cliente escolhe o tipo do pedido.
 3. Se necessário, escolhe um ou até dois sabores de creme, conforme o tipo do pedido.
-4. Cliente escolhe frutas, guloseimas, quantidades e calda.
+4. Cliente escolhe frutas, guloseimas, calda e suas quantidades.
 5. Cliente informa nome e telefone.
 6. Cliente escolhe a forma de pagamento.
 7. Pedido e validado e salvo no Firestore.

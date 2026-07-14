@@ -33,7 +33,11 @@ export function createMockOrder(orderDraft: OrderDraft): MockOrderResult {
   const selectedIceCreamFlavors = getIceCreamFlavorsByIds(orderDraft.iceCreamFlavorIds)
   const selectedFruits = buildPortionOrderItems(fruits, orderDraft.fruitSelections)
   const selectedToppings = buildPortionOrderItems(toppings, orderDraft.toppingSelections)
-  const selectedSyrup = syrups.find((syrup) => syrup.id === orderDraft.syrupId)
+  const syrupId = orderDraft.syrupSelection?.id ?? 'sem-calda'
+  const selectedSyrup = syrups.find((syrup) => syrup.id === syrupId)
+  const selectedSyrupPortion = orderDraft.syrupSelection
+    ? buildPortionOrderItems(syrups, [orderDraft.syrupSelection])[0]
+    : undefined
   const selectedPayment = paymentMethods.find((payment) => payment.id === orderDraft.payment.method)
   const now = new Date().toISOString()
 
@@ -63,8 +67,9 @@ export function createMockOrder(orderDraft: OrderDraft): MockOrderResult {
         toppingIds: getPortionSelectionIds(orderDraft.toppingSelections),
         toppings: selectedToppings.map((topping) => topping.name),
         toppingPortions: selectedToppings,
-        syrupId: orderDraft.syrupId,
+        syrupId,
         syrup: selectedSyrup?.name,
+        syrupPortion: selectedSyrupPortion,
         observation: orderDraft.observation.trim() || undefined,
       },
       payment: {

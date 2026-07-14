@@ -20,7 +20,7 @@ const order: OrderDraft = {
     { id: 'granola', quantity: 1 },
     { id: 'mms', quantity: 2 },
   ],
-  syrupId: 'chocolate',
+  syrupSelection: { id: 'chocolate', quantity: 3 },
   observation: '',
   customer: { name: 'Cliente', phone: '(99) 99999-9999' },
   payment: { method: 'pix', needsChange: false, changeFor: '' },
@@ -77,7 +77,7 @@ describe('ingredientAvailability', () => {
       iceCreamFlavorIds: ['morango'],
       fruitSelections: [{ id: 'morango', quantity: 1 }],
       toppingSelections: [{ id: 'granola', quantity: 1 }],
-      syrupId: 'sem-calda',
+      syrupSelection: null,
     })
     expect(result.removedItems).toHaveLength(4)
   })

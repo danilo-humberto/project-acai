@@ -5,6 +5,7 @@ import { formatCurrency } from '../../utils/formatCurrency'
 import {
   canCancelOrder,
   formatOrderPortions,
+  formatOrderSyrup,
   formatOrderShortDateTime,
   getOrderFruitPortions,
   getOrderIceCreamFlavors,
@@ -34,7 +35,7 @@ export function OrderCard({ order, isUpdating, onOpenDetails, onStatusChange }: 
   const detailsSummary = [
     ...getOrderIceCreamFlavors(order.items),
     portionSummary,
-    order.items.syrup,
+    formatOrderSyrup(order.items),
   ]
     .filter(Boolean)
     .join(', ') || 'Sem complementos'

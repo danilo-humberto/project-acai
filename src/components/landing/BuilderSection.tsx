@@ -138,11 +138,13 @@ export function BuilderSection({ builder }: BuilderSectionProps) {
             />
             <SyrupSelector
               syrups={syrups}
-              selectedSyrupId={builder.order.syrupId}
+              selection={builder.order.syrupSelection}
               unavailableSyrupIds={builder.availability.syrupIds}
               isAvailabilityReady={builder.isAvailabilityReady}
               stepNumber={getStepNumber("syrup")}
               onSelect={builder.setSyrup}
+              onIncrement={builder.incrementSyrup}
+              onDecrement={builder.decrementSyrup}
             />
             <CustomerForm
               customer={builder.order.customer}

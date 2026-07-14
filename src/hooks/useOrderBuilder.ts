@@ -39,7 +39,7 @@ const initialOrder: OrderDraft = {
   iceCreamFlavorIds: [],
   fruitSelections: [],
   toppingSelections: [],
-  syrupId: 'sem-calda',
+  syrupSelection: null,
   observation: '',
   customer: {
     name: '',
@@ -85,13 +85,23 @@ export function useOrderBuilder() {
     () => buildPortionOrderItems(toppings, order.toppingSelections),
     [order.toppingSelections],
   )
-  const selectedSyrup = useMemo(
-    () =>
-      syrups.find((syrup) => syrup.id === order.syrupId) ??
-      syrups.find((syrup) => syrup.id === 'sem-calda') ??
-      syrups[0],
-    [order.syrupId],
-  )
+  const selectedSyrup = useMemo(() => {
+    if (order.syrupSelection) {
+      const selectedPortion = buildPortionOrderItems(syrups, [order.syrupSelection])[0]
+
+      if (selectedPortion) {
+        return selectedPortion
+      }
+    }
+
+    return {
+      id: 'sem-calda',
+      name: syrups.find((syrup) => syrup.id === 'sem-calda')?.name ?? 'Sem calda',
+      quantity: 0,
+      extraUnitPriceCents: 0,
+      extraSubtotalCents: 0,
+    }
+  }, [order.syrupSelection])
 
   const total = useMemo(() => calculateOrderTotal(order), [order])
   const extraPortionsTotal = useMemo(() => calculateExtraPortionsTotal(order), [order])
@@ -247,11 +257,49 @@ export function useOrderBuilder() {
   }
 
   const setSyrup = (syrupId: string) => {
+    if (syrupId === 'sem-calda') {
+      setOrder((current) => ({ ...current, syrupSelection: null }))
+      return
+    }
+
     if (!isAvailabilityReady || !isIngredientAvailable(availability, 'syrups', syrupId)) {
       return
     }
 
-    setOrder((current) => ({ ...current, syrupId }))
+    setOrder((current) =>
+      current.syrupSelection?.id === syrupId
+        ? current
+        : { ...current, syrupSelection: { id: syrupId, quantity: 1 } },
+    )
+  }
+
+  const incrementSyrup = (syrupId: string) => {
+    if (!isAvailabilityReady || !isIngredientAvailable(availability, 'syrups', syrupId)) {
+      return
+    }
+
+    setOrder((current) => {
+      if (current.syrupSelection?.id !== syrupId) {
+        return { ...current, syrupSelection: { id: syrupId, quantity: 1 } }
+      }
+
+      return {
+        ...current,
+        syrupSelection: incrementPortionSelection([current.syrupSelection], syrupId)[0],
+      }
+    })
+  }
+
+  const decrementSyrup = (syrupId: string) => {
+    setOrder((current) => {
+      if (current.syrupSelection?.id !== syrupId) {
+        return current
+      }
+
+      const selections = decrementPortionSelection([current.syrupSelection], syrupId)
+
+      return { ...current, syrupSelection: selections[0] ?? null }
+    })
   }
 
   const setObservation = (observation: string) => {
@@ -358,6 +406,8 @@ export function useOrderBuilder() {
     incrementTopping,
     decrementTopping,
     setSyrup,
+    incrementSyrup,
+    decrementSyrup,
     setObservation,
     updateCustomerData,
     setPaymentMethod,

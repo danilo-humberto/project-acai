@@ -125,6 +125,24 @@ export function getOrderToppingPortions(items: Order['items']) {
   return getOrderPortions(items.toppingPortions, items.toppings)
 }
 
+export function getOrderSyrupPortion(items: Order['items']): PortionOrderItem | null {
+  if (items.syrupPortion) {
+    return items.syrupPortion
+  }
+
+  if (items.syrup && items.syrup !== 'Sem calda') {
+    return {
+      id: items.syrupId ?? 'legacy-syrup',
+      name: items.syrup,
+      quantity: 1,
+      extraUnitPriceCents: 0,
+      extraSubtotalCents: 0,
+    }
+  }
+
+  return null
+}
+
 export function formatOrderPortions(portions: PortionOrderItem[], emptyText = 'Nenhum') {
   if (portions.length === 0) {
     return emptyText
@@ -139,6 +157,14 @@ export function formatOrderPortions(portions: PortionOrderItem[], emptyText = 'N
       return `${portion.name} ${portion.quantity}x${extraText}`
     })
     .join(', ')
+}
+
+export function formatOrderSyrup(items: Order['items']) {
+  const syrupPortion = getOrderSyrupPortion(items)
+
+  return syrupPortion
+    ? formatOrderPortions([syrupPortion])
+    : items.syrup ?? 'Sem calda'
 }
 
 export function getOrderIceCreamFlavors(items: Order['items']) {
