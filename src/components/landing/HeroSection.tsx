@@ -45,14 +45,17 @@ export function HeroSection() {
                 data-hero-item
                 className="mt-7 flex flex-col gap-3 sm:flex-row"
               >
-                <Button
-                  href="#monte"
-                  size="lg"
-                  variant="plum"
-                  icon={<ShoppingBasket size={19} />}
-                >
-                  Montar meu açaí
-                </Button>
+                <div className="hero-mobile-cta relative isolate w-full sm:contents">
+                  <Button
+                    href="#monte"
+                    size="lg"
+                    variant="plum"
+                    className="w-full sm:w-auto"
+                    icon={<ShoppingBasket size={19} />}
+                  >
+                    Montar meu açaí
+                  </Button>
+                </div>
               </div>
             </div>
 
